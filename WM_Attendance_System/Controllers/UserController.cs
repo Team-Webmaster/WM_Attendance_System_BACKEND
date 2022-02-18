@@ -75,10 +75,15 @@ namespace WM_Attendance_System.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<User>> PostUserTable(Login login)
         {
-            var User = await _context.PendingUsers.SingleOrDefaultAsync(x=> x.Email == login.Email);
+            var User = await _context.Users.SingleOrDefaultAsync(x=> x.Email == login.Email);
             if (User is null)
             {
-                return BadRequest(new { state = false, message = "Email not found" });
+                var PendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == login.Email);
+                if (PendingUser is null)
+                {
+                    return BadRequest(new { state = false, message = "Email not found" });
+                }
+                return Ok(new { state = false, message = "Your account is in approving process. Please Try again later." });
             }
             if (BCrypt.Net.BCrypt.Verify(login.Password, User.Password))
             {
