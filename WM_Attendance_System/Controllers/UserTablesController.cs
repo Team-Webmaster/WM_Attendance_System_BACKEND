@@ -72,16 +72,6 @@ namespace WM_Attendance_System.Controllers
             return NoContent();
         }
 
-        // POST: api/UserTables
-        //[HttpPost]
-        //public async Task<ActionResult<UserTable>> PostUserTable(UserTable userTable)
-        //{
-        //    _context.UserTables.Add(userTable);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetUserTable", new { id = userTable.UserId }, userTable);
-        //}
-
         [HttpPost("login")]
         public async Task<ActionResult<UserTable>> PostUserTable(Login login)
         {
