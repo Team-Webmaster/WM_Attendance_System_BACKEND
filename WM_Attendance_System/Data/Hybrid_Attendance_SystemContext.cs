@@ -34,6 +34,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<Sms> Smss { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
+        public virtual DbSet<BlackListedEmail> BlackListedEmails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -314,12 +315,12 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.PendingUserId).HasColumnName("pending_user_id");
 
                 entity.Property(e => e.Address)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(30)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
@@ -336,7 +337,7 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.NoOfAnnualLeaves).HasColumnName("no_of_annual_leaves");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(20)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("password");
 
@@ -480,12 +481,12 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.Property(e => e.Address)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(30)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
@@ -502,7 +503,7 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.NoOfAnnualLeaves).HasColumnName("no_of_annual_leaves");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(20)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("password");
 
@@ -561,6 +562,19 @@ namespace WM_Attendance_System.Data
 
                             j.IndexerProperty<int>("UId").HasColumnName("u_id");
                         });
+            });
+
+            modelBuilder.Entity<BlackListedEmail>(entity => 
+            {
+                entity.HasKey(e => e.Email).HasName("PK_blackListedEmails");
+
+                entity.ToTable("blackListedEmails");
+
+                entity.Property(e => e.Email)
+                     .HasMaxLength(50)
+                     .IsUnicode(false)
+                     .HasColumnName("email");
+                
             });
 
             OnModelCreatingGeneratedFunctions(modelBuilder);

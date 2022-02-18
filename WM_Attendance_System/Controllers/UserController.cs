@@ -21,14 +21,14 @@ namespace WM_Attendance_System.Controllers
             _context = context;
         }
 
-        // GET: api/UserTables
+        // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTables()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/UserTables/5
+        // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserTable(int id)
         {
@@ -42,7 +42,7 @@ namespace WM_Attendance_System.Controllers
             return userTable;
         }
 
-        // PUT: api/UserTables/5
+        // PUT: api/User/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserTable(int id, User user)
         {
@@ -72,6 +72,23 @@ namespace WM_Attendance_System.Controllers
             return NoContent();
         }
 
+        //POST: api/User/register
+        [HttpPost("register")]
+        public async Task<ActionResult<PendingUser>> PostPendingUserTable(PendingUser pendingUser)
+        {
+            var blackListedUser = await _context.BlackListedEmails.FindAsync(pendingUser.Email);
+            if (blackListedUser is not null)
+            {
+                return BadRequest(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
+            }
+            pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
+            _context.PendingUsers.Add(pendingUser);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPendingUserTable", new { id = pendingUser.PendingUserId }, pendingUser);
+        }
+
+        //POST: api/User/login
         [HttpPost("login")]
         public async Task<ActionResult<User>> PostUserTable(Login login)
         {
@@ -95,7 +112,7 @@ namespace WM_Attendance_System.Controllers
 
 
 
-        // DELETE: api/UserTables/5
+        // DELETE: api/User/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserTable(int id)
         {
