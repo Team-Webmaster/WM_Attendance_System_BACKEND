@@ -81,11 +81,21 @@ namespace WM_Attendance_System.Controllers
             {
                 return BadRequest(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
             }
+            var isPendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
+            if(isPendingUser is not null)
+            {
+                return BadRequest(new { state = false, message = "This email is already in approving process. Try again with another email." });
+            }
+            var isUser = await _context.Users.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
+            if(isUser is not null)
+            {
+                return BadRequest(new { state = false, message = "This email is already registered. Try again with another email." });
+            }
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
             _context.PendingUsers.Add(pendingUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPendingUserTable", new { id = pendingUser.PendingUserId }, pendingUser);
+            return CreatedAtAction("GetPendingUserTable", pendingUser);
         }
 
         //POST: api/User/login
