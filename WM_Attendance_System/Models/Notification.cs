@@ -13,7 +13,7 @@ namespace WM_Attendance_System.Models
         public int? SenderId { get; set; }
         public int? ReceiverId { get; set; }
 
-        public virtual UserTable Receiver { get; set; }
-        public virtual UserTable Sender { get; set; }
+        public virtual User Receiver { get; set; }
+        public virtual User Sender { get; set; }
     }
 }

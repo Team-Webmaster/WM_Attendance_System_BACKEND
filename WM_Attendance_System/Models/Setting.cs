@@ -12,6 +12,6 @@ namespace WM_Attendance_System.Models
         public int? NoOfWorkingDaysPerWeek { get; set; }
         public int? AdminId { get; set; }
 
-        public virtual UserTable Admin { get; set; }
+        public virtual User Admin { get; set; }
     }
 }
