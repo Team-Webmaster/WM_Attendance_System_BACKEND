@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace WM_Attendance_System.Models
 {
-    public partial class UserTable
+    public partial class User
     {
-        public UserTable()
+        public User()
         {
             Attendances = new HashSet<Attendance>();
             HolidayCalendarEvents = new HashSet<HolidayCalendarEvent>();

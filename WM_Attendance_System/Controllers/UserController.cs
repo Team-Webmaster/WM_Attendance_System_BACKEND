@@ -12,27 +12,27 @@ namespace WM_Attendance_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserTablesController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly Hybrid_Attendance_SystemContext _context;
 
-        public UserTablesController(Hybrid_Attendance_SystemContext context)
+        public UserController(Hybrid_Attendance_SystemContext context)
         {
             _context = context;
         }
 
         // GET: api/UserTables
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserTable>>> GetUserTables()
+        public async Task<ActionResult<IEnumerable<User>>> GetUserTables()
         {
-            return await _context.UserTables.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
         // GET: api/UserTables/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserTable>> GetUserTable(int id)
+        public async Task<ActionResult<User>> GetUserTable(int id)
         {
-            var userTable = await _context.UserTables.FindAsync(id);
+            var userTable = await _context.Users.FindAsync(id);
 
             if (userTable == null)
             {
@@ -44,14 +44,14 @@ namespace WM_Attendance_System.Controllers
 
         // PUT: api/UserTables/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserTable(int id, UserTable userTable)
+        public async Task<IActionResult> PutUserTable(int id, User user)
         {
-            if (id != userTable.UserId)
+            if (id != user.UserId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(userTable).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -73,7 +73,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserTable>> PostUserTable(Login login)
+        public async Task<ActionResult<User>> PostUserTable(Login login)
         {
             var User = await _context.PendingUserTables.SingleOrDefaultAsync(x=> x.Email == login.Email);
             if (User is null)
@@ -94,13 +94,13 @@ namespace WM_Attendance_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserTable(int id)
         {
-            var userTable = await _context.UserTables.FindAsync(id);
+            var userTable = await _context.Users.FindAsync(id);
             if (userTable == null)
             {
                 return NotFound();
             }
 
-            _context.UserTables.Remove(userTable);
+            _context.Users.Remove(userTable);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -108,7 +108,7 @@ namespace WM_Attendance_System.Controllers
 
         private bool UserTableExists(int id)
         {
-            return _context.UserTables.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }

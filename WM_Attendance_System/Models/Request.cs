@@ -14,8 +14,8 @@ namespace WM_Attendance_System.Models
         public int? LeaveTypeId { get; set; }
         public int? ApprovalId { get; set; }
 
-        public virtual UserTable Approval { get; set; }
+        public virtual User Approval { get; set; }
         public virtual Leave LeaveType { get; set; }
-        public virtual UserTable Sender { get; set; }
+        public virtual User Sender { get; set; }
     }
 }

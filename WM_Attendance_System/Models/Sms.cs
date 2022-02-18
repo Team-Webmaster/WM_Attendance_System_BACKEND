@@ -8,15 +8,15 @@ namespace WM_Attendance_System.Models
     {
         public Sms()
         {
-            Users = new HashSet<UserTable>();
+            Users = new HashSet<User>();
         }
 
         public int Id { get; set; }
         public string Messsage { get; set; }
         public int? AdminId { get; set; }
 
-        public virtual UserTable Admin { get; set; }
+        public virtual User Admin { get; set; }
 
-        public virtual ICollection<UserTable> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

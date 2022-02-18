@@ -13,6 +13,6 @@ namespace WM_Attendance_System.Models
         public string Type { get; set; }
         public int? UId { get; set; }
 
-        public virtual UserTable UIdNavigation { get; set; }
+        public virtual User UIdNavigation { get; set; }
     }
 }

@@ -15,6 +15,6 @@ namespace WM_Attendance_System.Models
         public int? UserId { get; set; }
 
         public virtual LeaveDetail Leave { get; set; }
-        public virtual UserTable User { get; set; }
+        public virtual User User { get; set; }
     }
 }

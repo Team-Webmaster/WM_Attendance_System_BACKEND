@@ -8,7 +8,7 @@ namespace WM_Attendance_System.Models
     {
         public HolidayCalendarEvent()
         {
-            UIds = new HashSet<UserTable>();
+            UIds = new HashSet<User>();
         }
 
         public int Id { get; set; }
@@ -18,8 +18,8 @@ namespace WM_Attendance_System.Models
         public string Comment { get; set; }
         public int? EditorId { get; set; }
 
-        public virtual UserTable Editor { get; set; }
+        public virtual User Editor { get; set; }
 
-        public virtual ICollection<UserTable> UIds { get; set; }
+        public virtual ICollection<User> UIds { get; set; }
     }
 }

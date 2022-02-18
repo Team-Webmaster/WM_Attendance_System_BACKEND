@@ -8,7 +8,7 @@ namespace WM_Attendance_System.Models
     {
         public VideoConference()
         {
-            UIds = new HashSet<UserTable>();
+            UIds = new HashSet<User>();
         }
 
         public int ConferenceId { get; set; }
@@ -17,8 +17,8 @@ namespace WM_Attendance_System.Models
         public string HostId { get; set; }
         public int? SchedulerId { get; set; }
 
-        public virtual UserTable Scheduler { get; set; }
+        public virtual User Scheduler { get; set; }
 
-        public virtual ICollection<UserTable> UIds { get; set; }
+        public virtual ICollection<User> UIds { get; set; }
     }
 }

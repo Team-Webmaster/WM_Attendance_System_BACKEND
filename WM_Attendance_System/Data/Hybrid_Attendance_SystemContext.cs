@@ -32,7 +32,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Sms> Sms { get; set; }
-        public virtual DbSet<UserTable> UserTables { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace WM_Attendance_System.Data
                     .WithMany(p => p.CalendarEvents)
                     .UsingEntity<Dictionary<string, object>>(
                         "HolidayCalendarEventHasUser",
-                        l => l.HasOne<UserTable>().WithMany().HasForeignKey("UId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_HolidayCalendarEventHasUser"),
+                        l => l.HasOne<User>().WithMany().HasForeignKey("UId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_HolidayCalendarEventHasUser"),
                         r => r.HasOne<HolidayCalendarEvent>().WithMany().HasForeignKey("CalendarEventId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK1_HolidayCalendarEventHasUser"),
                         j =>
                         {
@@ -456,7 +456,7 @@ namespace WM_Attendance_System.Data
                     .WithMany(p => p.SmsNavigation)
                     .UsingEntity<Dictionary<string, object>>(
                         "SmshasUser",
-                        l => l.HasOne<UserTable>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_SMSHasUser"),
+                        l => l.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_SMSHasUser"),
                         r => r.HasOne<Sms>().WithMany().HasForeignKey("SmsId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK1_SMSHasUser"),
                         j =>
                         {
@@ -470,7 +470,7 @@ namespace WM_Attendance_System.Data
                         });
             });
 
-            modelBuilder.Entity<UserTable>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.UserId)
                     .HasName("PK_user");
@@ -549,7 +549,7 @@ namespace WM_Attendance_System.Data
                     .WithMany(p => p.CIds)
                     .UsingEntity<Dictionary<string, object>>(
                         "VideoConferenceHasUser",
-                        l => l.HasOne<UserTable>().WithMany().HasForeignKey("UId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK1_VideoConferenceHasUser"),
+                        l => l.HasOne<User>().WithMany().HasForeignKey("UId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK1_VideoConferenceHasUser"),
                         r => r.HasOne<VideoConference>().WithMany().HasForeignKey("CId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_VideoConferenceHasUser"),
                         j =>
                         {
