@@ -27,7 +27,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<LeaveDetail> LeaveDetails { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<PendingRequest> PendingRequests { get; set; }
-        public virtual DbSet<PendingUserTable> PendingUserTables { get; set; }
+        public virtual DbSet<PendingUser> PendingUsers { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
@@ -304,7 +304,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("type");
             });
 
-            modelBuilder.Entity<PendingUserTable>(entity =>
+            modelBuilder.Entity<PendingUser>(entity =>
             {
                 entity.HasKey(e => e.PendingUserId)
                     .HasName("PK_pending_user");

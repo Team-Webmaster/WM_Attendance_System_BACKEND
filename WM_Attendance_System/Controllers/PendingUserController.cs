@@ -12,27 +12,27 @@ namespace WM_Attendance_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PendingUserTablesController : ControllerBase
+    public class PendingUserController : ControllerBase
     {
         private readonly Hybrid_Attendance_SystemContext _context;
 
-        public PendingUserTablesController(Hybrid_Attendance_SystemContext context)
+        public PendingUserController(Hybrid_Attendance_SystemContext context)
         {
             _context = context;
         }
 
         // GET: api/PendingUserTables
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PendingUserTable>>> GetPendingUserTables()
+        public async Task<ActionResult<IEnumerable<PendingUser>>> GetPendingUserTables()
         {
-            return await _context.PendingUserTables.ToListAsync();
+            return await _context.PendingUsers.ToListAsync();
         }
 
         // GET: api/PendingUserTables/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PendingUserTable>> GetPendingUserTable(int id)
+        public async Task<ActionResult<PendingUser>> GetPendingUserTable(int id)
         {
-            var pendingUserTable = await _context.PendingUserTables.FindAsync(id);
+            var pendingUserTable = await _context.PendingUsers.FindAsync(id);
 
             if (pendingUserTable == null)
             {
@@ -45,7 +45,7 @@ namespace WM_Attendance_System.Controllers
         // PUT: api/PendingUserTables/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPendingUserTable(int id, PendingUserTable pendingUserTable)
+        public async Task<IActionResult> PutPendingUserTable(int id, PendingUser pendingUserTable)
         {
             if (id != pendingUserTable.PendingUserId)
             {
@@ -76,10 +76,10 @@ namespace WM_Attendance_System.Controllers
         // POST: api/PendingUserTables
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PendingUserTable>> PostPendingUserTable(PendingUserTable pendingUserTable)
+        public async Task<ActionResult<PendingUser>> PostPendingUserTable(PendingUser pendingUserTable)
         {
             pendingUserTable.Password = BCrypt.Net.BCrypt.HashPassword(pendingUserTable.Password);
-            _context.PendingUserTables.Add(pendingUserTable);
+            _context.PendingUsers.Add(pendingUserTable);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPendingUserTable", new { id = pendingUserTable.PendingUserId }, pendingUserTable);
@@ -89,13 +89,13 @@ namespace WM_Attendance_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePendingUserTable(int id)
         {
-            var pendingUserTable = await _context.PendingUserTables.FindAsync(id);
+            var pendingUserTable = await _context.PendingUsers.FindAsync(id);
             if (pendingUserTable == null)
             {
                 return NotFound();
             }
 
-            _context.PendingUserTables.Remove(pendingUserTable);
+            _context.PendingUsers.Remove(pendingUserTable);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -103,7 +103,7 @@ namespace WM_Attendance_System.Controllers
 
         private bool PendingUserTableExists(int id)
         {
-            return _context.PendingUserTables.Any(e => e.PendingUserId == id);
+            return _context.PendingUsers.Any(e => e.PendingUserId == id);
         }
     }
 }

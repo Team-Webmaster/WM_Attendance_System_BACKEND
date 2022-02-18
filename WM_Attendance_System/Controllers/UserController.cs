@@ -75,7 +75,7 @@ namespace WM_Attendance_System.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<User>> PostUserTable(Login login)
         {
-            var User = await _context.PendingUserTables.SingleOrDefaultAsync(x=> x.Email == login.Email);
+            var User = await _context.PendingUsers.SingleOrDefaultAsync(x=> x.Email == login.Email);
             if (User is null)
             {
                 return BadRequest(new { state = false, message = "Email not found" });

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WM_Attendance_System.Models
 {
-    public partial class PendingUserTable
+    public partial class PendingUser
     {
         public int PendingUserId { get; set; }
         public string Name { get; set; }
