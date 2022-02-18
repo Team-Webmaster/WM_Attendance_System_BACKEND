@@ -20,10 +20,10 @@ namespace WM_Attendance_System.Data
 
         public virtual DbSet<Attendance> Attendances { get; set; }
         public virtual DbSet<HolidayCalendarEvent> HolidayCalendarEvents { get; set; }
-        //public virtual DbSet<HolidayCalendarEvent1> HolidayCalendarEvents1 { get; set; }
+        public virtual DbSet<HolidayCalendarEventView> HolidayCalendarEventViews { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
         public virtual DbSet<LeaveCalendarEvent> LeaveCalendarEvents { get; set; }
-        //public virtual DbSet<LeaveCalendarEvent1> LeaveCalendarEvents1 { get; set; }
+        public virtual DbSet<LeaveCalendarEventView> LeaveCalendarEventsViews { get; set; }
         public virtual DbSet<LeaveDetail> LeaveDetails { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<PendingRequest> PendingRequests { get; set; }
@@ -31,7 +31,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
-        public virtual DbSet<Sms> Sms { get; set; }
+        public virtual DbSet<Sms> Smss { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
 
@@ -111,30 +111,30 @@ namespace WM_Attendance_System.Data
                         });
             });
 
-            //modelBuilder.Entity<HolidayCalendarEvent1>(entity =>
-            //{
-            //    entity.HasNoKey();
+            modelBuilder.Entity<HolidayCalendarEventView>(entity =>
+            {
+                entity.HasNoKey();
 
-            //    entity.ToView("HolidayCalendarEvents");
+                entity.ToView("HolidayCalendarEvents");
 
-            //    entity.Property(e => e.Comment)
-            //        .HasMaxLength(50)
-            //        .IsUnicode(false)
-            //        .HasColumnName("comment");
+                entity.Property(e => e.Comment)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("comment");
 
-            //    entity.Property(e => e.Date)
-            //        .HasColumnType("date")
-            //        .HasColumnName("date");
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
 
-            //    entity.Property(e => e.Name)
-            //        .HasMaxLength(30)
-            //        .IsUnicode(false)
-            //        .HasColumnName("name");
+                entity.Property(e => e.Name)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("name");
 
-            //    entity.Property(e => e.Time).HasColumnName("time");
+                entity.Property(e => e.Time).HasColumnName("time");
 
-            //    entity.Property(e => e.UserId).HasColumnName("user_id");
-            //});
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+            });
 
             modelBuilder.Entity<Leave>(entity =>
             {
@@ -192,30 +192,30 @@ namespace WM_Attendance_System.Data
                     .HasConstraintName("FK2_LeaveCalendarEvent");
             });
 
-            //modelBuilder.Entity<LeaveCalendarEvent1>(entity =>
-            //{
-            //    entity.HasNoKey();
+            modelBuilder.Entity<LeaveCalendarEventView>(entity =>
+            {
+                entity.HasNoKey();
 
-            //    entity.ToView("LeaveCalendarEvents");
+                entity.ToView("LeaveCalendarEvents");
 
-            //    entity.Property(e => e.Comment)
-            //        .HasMaxLength(50)
-            //        .IsUnicode(false)
-            //        .HasColumnName("comment");
+                entity.Property(e => e.Comment)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("comment");
 
-            //    entity.Property(e => e.Date)
-            //        .HasColumnType("date")
-            //        .HasColumnName("date");
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
 
-            //    entity.Property(e => e.Name)
-            //        .HasMaxLength(30)
-            //        .IsUnicode(false)
-            //        .HasColumnName("name");
+                entity.Property(e => e.Name)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("name");
 
-            //    entity.Property(e => e.Time).HasColumnName("time");
+                entity.Property(e => e.Time).HasColumnName("time");
 
-            //    entity.Property(e => e.UserId).HasColumnName("user_id");
-            //});
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+            });
 
             modelBuilder.Entity<LeaveDetail>(entity =>
             {
