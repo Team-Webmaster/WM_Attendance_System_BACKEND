@@ -1,0 +1,126 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "Hybrid_Attendance_SystemContext",
+   "ContextNamespace": "Data",
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": "Models",
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "WM_Attendance_System",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Attendance]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HolidayCalendarEvent]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HolidayCalendarEventHasUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Leave]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LeaveCalendarEvent]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LeaveDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Notification]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[pendingUserTable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Report]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Request]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Settings]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SMS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SMSHasUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[userTable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[VideoConference]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[VideoConferenceHasUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HolidayCalendarEvents]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[LeaveCalendarEvents]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[PendingRequests]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[WorkingHours]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[AttendHours]",
+         "ObjectType": 2
+      },
+      {
+         "Name": "[dbo].[BreakHours]",
+         "ObjectType": 2
+      },
+      {
+         "Name": "[dbo].[CalendarEventsByUser]",
+         "ObjectType": 2
+      }
+   ],
+   "UiHint": "DESKTOP-IHHPCC7.Hybrid_Attendance_System",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}
