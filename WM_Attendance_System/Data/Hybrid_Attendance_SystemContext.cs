@@ -320,12 +320,12 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(50)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(30)
+                    .HasMaxLength(75)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
@@ -342,7 +342,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("password");
 
                 entity.Property(e => e.ProfilePic)
-                    .HasMaxLength(30)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("profile_pic");
 
@@ -486,12 +486,12 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(50)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(30)
+                    .HasMaxLength(75)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
@@ -508,7 +508,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("password");
 
                 entity.Property(e => e.ProfilePic)
-                    .HasMaxLength(30)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("profile_pic");
 
@@ -571,7 +571,7 @@ namespace WM_Attendance_System.Data
                 entity.ToTable("blackListedEmails");
 
                 entity.Property(e => e.Email)
-                     .HasMaxLength(50)
+                     .HasMaxLength(70)
                      .IsUnicode(false)
                      .HasColumnName("email");
                 
