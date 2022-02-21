@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WM_Attendance_System.Settings;
+using WM_Attendance_System.Services;
 
 namespace WM_Attendance_System
 {
@@ -36,7 +38,8 @@ namespace WM_Attendance_System
             services.AddDbContext<WM_Attendance_System.Data.Hybrid_Attendance_SystemContext>((options) => {
                 options.UseSqlServer(Configuration.GetConnectionString("DBConn"));
             });
-
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

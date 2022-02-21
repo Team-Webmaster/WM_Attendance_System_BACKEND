@@ -26,7 +26,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<LeaveCalendarEventView> LeaveCalendarEventsViews { get; set; }
         public virtual DbSet<LeaveDetail> LeaveDetails { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
-        public virtual DbSet<PendingRequest> PendingRequests { get; set; }
+        public virtual DbSet<PendingRequestView> PendingRequests { get; set; }
         public virtual DbSet<PendingUser> PendingUsers { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
@@ -220,6 +220,8 @@ namespace WM_Attendance_System.Data
 
             modelBuilder.Entity<LeaveDetail>(entity =>
             {
+                entity.ToTable("LeaveDetails");
+
                 entity.HasKey(e => e.LeaveId);
 
                 entity.Property(e => e.LeaveId).HasColumnName("leave_id");
@@ -277,7 +279,7 @@ namespace WM_Attendance_System.Data
                     .HasConstraintName("FK1_Notification");
             });
 
-            modelBuilder.Entity<PendingRequest>(entity =>
+            modelBuilder.Entity<PendingRequestView>(entity =>
             {
                 entity.HasNoKey();
 
@@ -320,12 +322,12 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(50)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(30)
+                    .HasMaxLength(75)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
@@ -342,7 +344,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("password");
 
                 entity.Property(e => e.ProfilePic)
-                    .HasMaxLength(30)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("profile_pic");
 
@@ -352,6 +354,11 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("telephone");
 
                 entity.Property(e => e.Type).HasColumnName("type");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("status");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -417,6 +424,8 @@ namespace WM_Attendance_System.Data
 
             modelBuilder.Entity<Setting>(entity =>
             {
+                entity.ToTable("Settings");
+
                 entity.HasKey(e => e.SettingsId);
 
                 entity.Property(e => e.SettingsId).HasColumnName("settings_id");
@@ -486,12 +495,12 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("address");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(50)
+                    .HasMaxLength(70)
                     .IsUnicode(false)
                     .HasColumnName("email");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(30)
+                    .HasMaxLength(75)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
@@ -508,7 +517,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("password");
 
                 entity.Property(e => e.ProfilePic)
-                    .HasMaxLength(30)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("profile_pic");
 
@@ -571,7 +580,7 @@ namespace WM_Attendance_System.Data
                 entity.ToTable("blackListedEmails");
 
                 entity.Property(e => e.Email)
-                     .HasMaxLength(50)
+                     .HasMaxLength(70)
                      .IsUnicode(false)
                      .HasColumnName("email");
                 
