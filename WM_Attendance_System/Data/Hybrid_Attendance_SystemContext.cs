@@ -220,6 +220,8 @@ namespace WM_Attendance_System.Data
 
             modelBuilder.Entity<LeaveDetail>(entity =>
             {
+                entity.ToTable("LeaveDetails");
+
                 entity.HasKey(e => e.LeaveId);
 
                 entity.Property(e => e.LeaveId).HasColumnName("leave_id");
@@ -417,6 +419,8 @@ namespace WM_Attendance_System.Data
 
             modelBuilder.Entity<Setting>(entity =>
             {
+                entity.ToTable("Settings");
+
                 entity.HasKey(e => e.SettingsId);
 
                 entity.Property(e => e.SettingsId).HasColumnName("settings_id");
