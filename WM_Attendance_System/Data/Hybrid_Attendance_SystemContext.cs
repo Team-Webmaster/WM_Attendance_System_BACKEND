@@ -354,6 +354,11 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("telephone");
 
                 entity.Property(e => e.Type).HasColumnName("type");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("status");
             });
 
             modelBuilder.Entity<Report>(entity =>

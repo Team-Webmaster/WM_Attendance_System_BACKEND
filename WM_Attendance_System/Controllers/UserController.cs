@@ -95,7 +95,7 @@ namespace WM_Attendance_System.Controllers
             _context.PendingUsers.Add(pendingUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPendingUserTable", pendingUser);
+            return CreatedAtAction("PostPendingUserTable", new { id = pendingUser.PendingUserId }, pendingUser);
         }
 
         //POST: api/User/login

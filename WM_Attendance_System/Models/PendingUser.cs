@@ -16,5 +16,6 @@ namespace WM_Attendance_System.Models
         public string ProfilePic { get; set; }
         public int? Type { get; set; }
         public int? NoOfAnnualLeaves { get; set; }
+        public string Status { get; set; }
     }
 }
