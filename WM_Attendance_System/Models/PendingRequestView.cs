@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WM_Attendance_System.Models
 {
-    public partial class PendingRequest
+    public partial class PendingRequestView
     {
         public string Name { get; set; }
         public DateTime? Date { get; set; }

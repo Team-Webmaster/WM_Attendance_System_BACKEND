@@ -26,7 +26,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<LeaveCalendarEventView> LeaveCalendarEventsViews { get; set; }
         public virtual DbSet<LeaveDetail> LeaveDetails { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
-        public virtual DbSet<PendingRequest> PendingRequests { get; set; }
+        public virtual DbSet<PendingRequestView> PendingRequests { get; set; }
         public virtual DbSet<PendingUser> PendingUsers { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
@@ -277,7 +277,7 @@ namespace WM_Attendance_System.Data
                     .HasConstraintName("FK1_Notification");
             });
 
-            modelBuilder.Entity<PendingRequest>(entity =>
+            modelBuilder.Entity<PendingRequestView>(entity =>
             {
                 entity.HasNoKey();
 
