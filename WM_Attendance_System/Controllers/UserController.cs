@@ -42,6 +42,68 @@ namespace WM_Attendance_System.Controllers
             return userTable;
         }
 
+        //PUT: api/User/changepassword/5
+        [HttpPut("changepassword/{id}")]
+        public async Task<IActionResult> ChangePassword(int id,ChangePassword changePassword)
+        {
+            if (!UserTableExists(id))
+            {
+                return NotFound();
+            }
+            var user = await _context.Users.FindAsync(id);
+            if (!BCrypt.Net.BCrypt.Verify(changePassword.CurrentPassword, user.Password))
+            {
+                return BadRequest(new { state = false, message = "Old password incorrect." });
+            }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(changePassword.NewPassword);
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { state = true, message = "Password changed succefully completed." });
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                if (!UserTableExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        //PUT: api/User/forgotpassword/5
+        [HttpPut("forgotpassword/{id}")]
+        public async Task<IActionResult> ForgotPassword(int id, ForgotPassword forgotPassword)
+        {
+            if (!UserTableExists(id))
+            {
+                return NotFound();
+            }
+            var user = await _context.Users.FindAsync(id);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(forgotPassword.NewPassword);
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { state = true, message = "Password changed succefully completed." });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserTableExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
         // PUT: api/User/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserTable(int id, User user)
@@ -50,7 +112,6 @@ namespace WM_Attendance_System.Controllers
             {
                 return BadRequest();
             }
-
             _context.Entry(user).State = EntityState.Modified;
 
             try
