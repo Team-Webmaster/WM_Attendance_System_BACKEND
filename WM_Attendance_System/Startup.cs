@@ -42,11 +42,11 @@ namespace WM_Attendance_System
             services.AddTransient<IMailService, MailService>();
             services.AddCors((options) =>
             {
-                options.AddPolicy("AllowAllHeaders", (builder) =>
+                options.AddDefaultPolicy((builder) =>
                 {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
         }
@@ -54,6 +54,7 @@ namespace WM_Attendance_System
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,8 +72,6 @@ namespace WM_Attendance_System
             {
                 endpoints.MapControllers();
             });
-
-            app.UseCors("AllowAllHeaders");
         }
     }
 }
