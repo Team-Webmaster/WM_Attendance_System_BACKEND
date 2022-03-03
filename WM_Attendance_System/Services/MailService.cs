@@ -40,6 +40,10 @@ namespace WM_Attendance_System.Services
             {
                 throw e.InnerException;
             }
+            finally
+            {
+                client.Dispose();
+            }
         }
     }
 }
