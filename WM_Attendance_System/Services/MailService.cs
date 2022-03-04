@@ -27,6 +27,10 @@ namespace WM_Attendance_System.Services
             email.Body = mailRequest.Body;
             email.BodyEncoding = Encoding.UTF8;
             email.IsBodyHtml = true;
+            if (mailRequest.MailAttachment is not null)
+            {
+                email.Attachments.Add(mailRequest.MailAttachment);
+            }
             SmtpClient client = new SmtpClient(_mailSettings.Host, _mailSettings.Port);
             NetworkCredential networkCredential = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
             client.EnableSsl = true;

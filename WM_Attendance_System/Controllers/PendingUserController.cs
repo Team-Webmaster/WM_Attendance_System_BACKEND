@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WM_Attendance_System.Data;
 using WM_Attendance_System.Models;
+using WM_Attendance_System.Services;
 
 namespace WM_Attendance_System.Controllers
 {
@@ -20,6 +21,7 @@ namespace WM_Attendance_System.Controllers
         {
             _context = context;
         }
+
 
         // GET: api/PendingUser
         [HttpGet]
