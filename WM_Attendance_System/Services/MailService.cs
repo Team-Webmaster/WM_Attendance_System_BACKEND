@@ -46,6 +46,7 @@ namespace WM_Attendance_System.Services
             }
             finally
             {
+                email.Dispose();
                 client.Dispose();
             }
         }

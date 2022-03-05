@@ -126,6 +126,10 @@ namespace WM_Attendance_System.Controllers
             {
                 throw e.InnerException;
             }
+            finally
+            {
+                new FileInfo("C:/Users/~Lakshitha~/Downloads/file.csv").Delete();
+            }
         }
 
         private bool ReportExists(int id)
