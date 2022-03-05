@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using CsvHelper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,13 @@ namespace WM_Attendance_System.Controllers
     {
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IMailService mailService;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public ReportController(Hybrid_Attendance_SystemContext context, IMailService mailService)
+        public ReportController(Hybrid_Attendance_SystemContext context, IMailService mailService, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             this.mailService = mailService;
+            this.hostEnvironment = hostEnvironment;
         }
 
         // GET: api/Report
@@ -110,15 +113,16 @@ namespace WM_Attendance_System.Controllers
         [HttpPost("report")]
         public async Task<ActionResult> SendReport(MailRequest mailRequest)
         {
+            string path = Path.Combine(hostEnvironment.ContentRootPath, "Temp", "report.csv");
             try
             {
                 var records = await _context.PendingUsers.ToListAsync();
-                var writer = new StreamWriter("C:/Users/~Lakshitha~/Downloads/file.csv");
+                var writer = new StreamWriter(path);
                 var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 await csv.WriteRecordsAsync(records);
                 writer.Flush();
                 await csv.DisposeAsync();
-                mailRequest.MailAttachment = new Attachment("C:/Users/~Lakshitha~/Downloads/file.csv");
+                mailRequest.MailAttachment = new Attachment(path);
                 await mailService.SendEmailAsync(mailRequest);
                 return Ok(new { state = true, message = "Report Send Succesfully" });
             }
@@ -128,7 +132,7 @@ namespace WM_Attendance_System.Controllers
             }
             finally
             {
-                new FileInfo("C:/Users/~Lakshitha~/Downloads/file.csv").Delete();
+                new FileInfo(path).Delete();
             }
         }
 

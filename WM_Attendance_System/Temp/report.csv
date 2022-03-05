@@ -1,0 +1,7 @@
+PendingUserId,Name,Nic,Email,Password,Address,Telephone,ProfilePic,Type,NoOfAnnualLeaves,Status
+1,LakSK98,string,abcd@gmail.com,$2a$11$Ir.s9fehErF16AOgXS807OEiQjy2uBoD6sVYiTLJw4e2/g2b3zP5m,string,string,string,0,0,string
+1001,string,string,string,$2a$11$5zS5faghgq4wX2VFjIDTc.XOo9N1ercPI/36GhekILZ47RZU5M/tO,string,string,string,0,0,string
+1002,string,string,string1,$2a$11$xUy2/AWimslHX882knENVuEAxT6TzcgFF2ntcRWFQnLALzFX85qzS,string,string,,0,,string
+1005,Lakshitha Kumara,12345,lakshitha19980914@gmail.com,$2a$11$rPm/oaw.hKODGuhAoA48ueDnXgfZbYT/sr8xqw0tjTlW6bZ42LOvS,"Surasa,Thiththagalla,Ahangama,Southern Province.",564564,1234.png,0,20,Pending
+2001,Test user,test nic,test12@gmail.com,$2a$11$BUF9PhrwBBtg.Pgy3IBlhO4wUTNr3tm2TkATemmbFgmXiYVZGgWti,abcd,119,1224.png,0,0,Pending
+3001,Test User,test nic,email@gmail.com,$2a$11$RIVPHvCiG0.mhlWo1QGs2.qqaITV2AjgS4Wsg8jEFSh5LoPX/ur5i,test address,hdch,ghdchg.png,0,0,Pending
