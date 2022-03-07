@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +17,12 @@ namespace WM_Attendance_System.Controllers
     public class UserController : ControllerBase
     {
         private readonly Hybrid_Attendance_SystemContext _context;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public UserController(Hybrid_Attendance_SystemContext context)
+        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this.hostEnvironment = hostEnvironment;
         }
 
         // GET: api/User
@@ -135,7 +139,7 @@ namespace WM_Attendance_System.Controllers
 
         //POST: api/User/register
         [HttpPost("register")]
-        public async Task<ActionResult<PendingUser>> PostPendingUserTable(PendingUser pendingUser)
+        public async Task<ActionResult<PendingUser>> PostPendingUserTable([FromForm]PendingUser pendingUser)
         {
             var blackListedUser = await _context.BlackListedEmails.FindAsync(pendingUser.Email);
             if (blackListedUser is not null)
@@ -152,6 +156,7 @@ namespace WM_Attendance_System.Controllers
             {
                 return BadRequest(new { state = false, message = "This email is already registered. Try again with another email." });
             }
+            pendingUser.ProfilePic = await SaveImage(pendingUser.ProfilePicture);
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
             _context.PendingUsers.Add(pendingUser);
             await _context.SaveChangesAsync();
@@ -169,7 +174,7 @@ namespace WM_Attendance_System.Controllers
                 var PendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == login.Email);
                 if (PendingUser is null)
                 {
-                    return BadRequest(new { state = false, message = "Email not found" });
+                    return Ok(new { state = false, message = "Email not found" });
                 }
                 return Ok(new { state = false, message = "Your account is in approving process. Please Try again later." });
             }
@@ -177,7 +182,7 @@ namespace WM_Attendance_System.Controllers
             {
                 return Ok(new { state = true, data = User });
             }
-            return BadRequest(new { state = false, message = "Password Incorrect" });
+            return Ok(new { state = false, message = "Password Incorrect" });
 
         }
 
@@ -197,6 +202,16 @@ namespace WM_Attendance_System.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task<string> SaveImage(IFormFile formFile)
+        {
+            string imgName = new String(Path.GetFileNameWithoutExtension(formFile.FileName).Take(10).ToArray()).Replace(' ','-');
+            imgName = imgName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(formFile.FileName);
+            string imgPath = Path.Combine(hostEnvironment.ContentRootPath, "Images", imgName);
+            var fileStream = new FileStream(imgPath, FileMode.Create);
+            await formFile.CopyToAsync(fileStream);
+            return imgName;
         }
 
         private bool UserTableExists(int id)

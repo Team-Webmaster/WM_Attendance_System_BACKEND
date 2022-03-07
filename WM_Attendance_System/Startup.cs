@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WM_Attendance_System.Settings;
 using WM_Attendance_System.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace WM_Attendance_System
 {
@@ -61,6 +63,12 @@ namespace WM_Attendance_System
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WM_Attendance_System v1"));
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
+                RequestPath = "/Images"
+            });
 
             app.UseHttpsRedirection();
 
