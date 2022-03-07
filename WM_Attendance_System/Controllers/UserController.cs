@@ -144,17 +144,17 @@ namespace WM_Attendance_System.Controllers
             var blackListedUser = await _context.BlackListedEmails.FindAsync(pendingUser.Email);
             if (blackListedUser is not null)
             {
-                return BadRequest(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
+                return Ok(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
             }
             var isPendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isPendingUser is not null)
             {
-                return BadRequest(new { state = false, message = "This email is already in approving process. Try again with another email." });
+                return Ok(new { state = false, message = "This email is already in approving process. Try again with another email." });
             }
             var isUser = await _context.Users.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isUser is not null)
             {
-                return BadRequest(new { state = false, message = "This email is already registered. Try again with another email." });
+                return Ok(new { state = false, message = "This email is already registered. Try again with another email." });
             }
             pendingUser.ProfilePic = await SaveImage(pendingUser.ProfilePicture);
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
