@@ -10,12 +10,12 @@ namespace WM_Attendance_System.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public string InTime { get; set; }
-        public string OutTime { get; set; }
+        public DateTime InTime { get; set; }
+        public DateTime OutTime { get; set; }
         public string Type { get; set; }
-        //public int? UId { get; set; }
+        public int? UId { get; set; }
         [NotMapped]
         public IFormFile FaceImage { get; set; }
-        //public virtual User UIdNavigation { get; set; }
+        public virtual User UIdNavigation { get; set; }
     }
 }
