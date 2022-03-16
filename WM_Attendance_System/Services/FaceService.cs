@@ -29,7 +29,7 @@ namespace WM_Attendance_System.Services
         public async Task<DetectedFace> DetectFaceExtract(IFaceClient client,Stream image)
         {
             IList<DetectedFace> detectedFaces;
-            image.Position = ;
+            image.Position = 0;
             detectedFaces = await client.Face.DetectWithStreamAsync(image,detectionModel:DetectionModel.Detection03,recognitionModel:RecognitionModel.Recognition04,returnFaceAttributes:new List<FaceAttributeType> { FaceAttributeType.QualityForRecognition},faceIdTimeToLive:300);
             return detectedFaces[0];
         }
