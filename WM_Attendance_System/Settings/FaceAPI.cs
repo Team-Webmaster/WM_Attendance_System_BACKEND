@@ -9,6 +9,6 @@ namespace WM_Attendance_System.Settings
     {
         public string APIKey { get; set; }
         public string Endpoint { get; set; }
-        public string SubscriptionID { get; set; }
+        public string SubscriptionID1 { get; set; }
     }
 }

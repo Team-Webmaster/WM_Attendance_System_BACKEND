@@ -21,7 +21,7 @@ namespace WM_Attendance_System.Controllers
     {
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IFaceService faceService;
-        private readonly IWebHostEnvironment hostEnvironment;
+        private readonly IWebHostEnvironment hostEnvironmen;
 
         public AttendanceController(Hybrid_Attendance_SystemContext context, IFaceService faceService, IWebHostEnvironment hostEnvironment)
         {
