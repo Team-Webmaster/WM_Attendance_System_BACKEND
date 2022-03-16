@@ -22,13 +22,11 @@ namespace WM_Attendance_System.Controllers
     {
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IMailService mailService;
-        private readonly IWebHostEnvironment hostEnvironment;
 
-        public ReportController(Hybrid_Attendance_SystemContext context, IMailService mailService, IWebHostEnvironment hostEnvironment)
+        public ReportController(Hybrid_Attendance_SystemContext context, IMailService mailService)
         {
             _context = context;
             this.mailService = mailService;
-            this.hostEnvironment = hostEnvironment;
         }
 
         // GET: api/Report
@@ -113,26 +111,23 @@ namespace WM_Attendance_System.Controllers
         [HttpPost("report")]
         public async Task<ActionResult> SendReport(MailRequest mailRequest)
         {
-            string path = Path.Combine(hostEnvironment.ContentRootPath, "Temp", "report.csv");
             try
             {
                 var records = await _context.PendingUsers.ToListAsync();
-                var writer = new StreamWriter(path);
+                MemoryStream report = new MemoryStream();
+                var writer = new StreamWriter(report);
                 var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 await csv.WriteRecordsAsync(records);
                 writer.Flush();
-                await csv.DisposeAsync();
-                mailRequest.MailAttachment = new Attachment(path);
+                report.Position = 0;
+                mailRequest.MailAttachment = new Attachment(report,"report.csv","text/csv");
                 await mailService.SendEmailAsync(mailRequest);
+                await csv.DisposeAsync();
                 return Ok(new { state = true, message = "Report Send Succesfully" });
             }
             catch (Exception e)
             {
                 throw e.InnerException;
-            }
-            finally
-            {
-                new FileInfo(path).Delete();
             }
         }
 

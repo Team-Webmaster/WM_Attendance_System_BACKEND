@@ -57,12 +57,12 @@ namespace WM_Attendance_System.Data
                     .IsUnicode(false)
                     .HasColumnName("type");
 
-                entity.Property(e => e.UId).HasColumnName("u_id");
+                //entity.Property(e => e.UId).HasColumnName("u_id");
 
-                entity.HasOne(d => d.UIdNavigation)
-                    .WithMany(p => p.Attendances)
-                    .HasForeignKey(d => d.UId)
-                    .HasConstraintName("FK_Attendance");
+                //entity.HasOne(d => d.UIdNavigation)
+                //    .WithMany(p => p.Attendances)
+                //    .HasForeignKey(d => d.UId)
+                //    .HasConstraintName("FK_Attendance");
             });
 
             modelBuilder.Entity<HolidayCalendarEvent>(entity =>

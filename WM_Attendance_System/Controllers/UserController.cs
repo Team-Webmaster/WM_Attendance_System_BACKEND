@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.EntityFrameworkCore;
 using WM_Attendance_System.Data;
 using WM_Attendance_System.Models;
+using WM_Attendance_System.Services;
 
 namespace WM_Attendance_System.Controllers
 {
@@ -18,11 +20,13 @@ namespace WM_Attendance_System.Controllers
     {
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IWebHostEnvironment hostEnvironment;
+        private readonly IFaceService faceService;
 
-        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment)
+        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService)
         {
             _context = context;
             this.hostEnvironment = hostEnvironment;
+            this.faceService = faceService;
         }
 
         // GET: api/User
@@ -156,11 +160,17 @@ namespace WM_Attendance_System.Controllers
             {
                 return Ok(new { state = false, message = "This email is already registered. Try again with another email." });
             }
+            string imgName = await SaveImage(pendingUser.ProfilePicture);
+            IFaceClient faceClient = faceService.Authenticate();
+            var addedFaceToFaceList=await faceService.AddFaceToFaceList(faceClient,imgName);
+            if(addedFaceToFaceList is null)
+            {
+                return Ok(new { state = false, message = "Uploaded image quality is not enough" });
+            }
             pendingUser.ProfilePic = await SaveImage(pendingUser.ProfilePicture);
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
             _context.PendingUsers.Add(pendingUser);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("PostPendingUserTable", new { id = pendingUser.PendingUserId }, pendingUser);
         }
 
@@ -211,6 +221,7 @@ namespace WM_Attendance_System.Controllers
             string imgPath = Path.Combine(hostEnvironment.ContentRootPath, "Images", imgName);
             var fileStream = new FileStream(imgPath, FileMode.Create);
             await formFile.CopyToAsync(fileStream);
+            await fileStream.DisposeAsync();
             return imgName;
         }
 

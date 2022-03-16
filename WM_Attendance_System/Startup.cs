@@ -42,6 +42,8 @@ namespace WM_Attendance_System
             });
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, MailService>();
+            services.Configure<FaceAPI>(Configuration.GetSection("FaceAPI"));
+            services.AddTransient<IFaceService, FaceService>();
             services.AddCors((options) =>
             {
                 options.AddDefaultPolicy((builder) =>
