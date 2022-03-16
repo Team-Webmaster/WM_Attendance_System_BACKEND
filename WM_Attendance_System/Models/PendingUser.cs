@@ -1,6 +1,8 @@
 ﻿#nullable disable
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WM_Attendance_System.Models
 {
@@ -17,5 +19,7 @@ namespace WM_Attendance_System.Models
         public int? Type { get; set; }
         public int? NoOfAnnualLeaves { get; set; }
         public string Status { get; set; }
+        [NotMapped]
+        public IFormFile ProfilePicture { get; set; }
     }
 }

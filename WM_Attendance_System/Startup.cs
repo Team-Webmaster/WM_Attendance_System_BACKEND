@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WM_Attendance_System.Settings;
 using WM_Attendance_System.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace WM_Attendance_System
 {
@@ -40,17 +42,35 @@ namespace WM_Attendance_System
             });
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, MailService>();
+            services.Configure<FaceAPI>(Configuration.GetSection("FaceAPI"));
+            services.AddTransient<IFaceService, FaceService>();
+            services.AddCors((options) =>
+            {
+                options.AddDefaultPolicy((builder) =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WM_Attendance_System v1"));
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
+                RequestPath = "/Images"
+            });
 
             app.UseHttpsRedirection();
 
