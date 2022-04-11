@@ -196,8 +196,6 @@ namespace WM_Attendance_System.Controllers
 
         }
 
-
-
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserTable(int id)

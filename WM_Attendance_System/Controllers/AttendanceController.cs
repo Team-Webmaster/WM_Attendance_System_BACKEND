@@ -110,7 +110,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> MarkAttendance([FromForm]Attendance attendance)
+        public async Task<ActionResult<Attendance>> MarkAttendance([FromForm]Attendance attendance)
         {
             IFaceClient faceClient = faceService.Authenticate();
             var result = await faceService.IdentifyFaceList(faceClient, await SaveImage(attendance.FaceImage));
@@ -118,7 +118,7 @@ namespace WM_Attendance_System.Controllers
             {
                 return Ok(new { state = false, message = "Face not matched" });
             }
-            return Ok(new { state = true, message = "Face matched", data = result });
+            return await PostAttendance(attendance);
         }
 
         private async Task<MemoryStream> SaveImage(IFormFile formFile)
