@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,14 @@ namespace WM_Attendance_System.Controllers
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IWebHostEnvironment hostEnvironment;
         private readonly IFaceService faceService;
+        private readonly IJWTService jWTService;
 
-        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService)
+        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService, IJWTService jWTService)
         {
             _context = context;
             this.hostEnvironment = hostEnvironment;
             this.faceService = faceService;
+            this.jWTService = jWTService;
         }
 
         // GET: api/User
@@ -194,6 +197,43 @@ namespace WM_Attendance_System.Controllers
             }
             return Ok(new { state = false, message = "Password Incorrect" });
 
+        }
+
+        [AllowAnonymous]
+        [HttpPost("authorize")]
+        public async Task<ActionResult<User>> AuthorizeUserTable(Login login)
+        {
+            var User = await _context.Users.SingleOrDefaultAsync(x => x.Email == login.Email);
+            if (User is null)
+            {
+                var PendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == login.Email);
+                if (PendingUser is null)
+                {
+                    return Ok(new { state = false, message = "Email not found" });
+                }
+                return Ok(new { state = false, message = "Your account is in approving process. Please Try again later." });
+            }
+            if (BCrypt.Net.BCrypt.Verify(login.Password, User.Password))
+            {
+                var token = jWTService.generateJwtToken(login);
+                return Ok(new { state = true, token = token });
+            }
+            return Ok(new { state = false, message = "Password Incorrect" });
+        }
+
+        [Authorize]
+        [HttpGet("auth")]
+        public async Task<ActionResult<User>> GetUser()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ",string.Empty);
+            string userEmail = jWTService.readClaimJwtToken(token);
+            var userTable = await _context.Users.SingleOrDefaultAsync(x => x.Email == userEmail);
+            if (userTable == null)
+            {
+                return NotFound();
+            }
+
+            return userTable;
         }
 
         // DELETE: api/User/5

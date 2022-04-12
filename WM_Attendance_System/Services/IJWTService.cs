@@ -9,5 +9,6 @@ namespace WM_Attendance_System.Services
     public interface IJWTService
     {
         public string generateJwtToken(Login login);
+        public string readClaimJwtToken(string token);
     }
 }

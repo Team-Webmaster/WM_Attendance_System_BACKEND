@@ -96,6 +96,8 @@ namespace WM_Attendance_System
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
+
             app.UseRouting();
 
             app.UseAuthorization();
