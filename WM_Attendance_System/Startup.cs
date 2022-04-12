@@ -49,6 +49,8 @@ namespace WM_Attendance_System
             services.AddTransient<IFaceService, FaceService>();
             services.Configure<JWTSettings>(Configuration.GetSection("JWT"));
             services.AddTransient<IJWTService, JWTService>();
+            services.Configure<ZoomAPI>(Configuration.GetSection("ZoomAPI"));
+            services.AddTransient<IZoomService, ZoomService>();
             services.AddCors((options) =>
             {
                 options.AddDefaultPolicy((builder) =>
