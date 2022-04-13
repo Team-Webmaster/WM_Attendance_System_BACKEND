@@ -359,6 +359,9 @@ namespace WM_Attendance_System.Data
                     .HasMaxLength(15)
                     .IsUnicode(false)
                     .HasColumnName("status");
+
+                entity.Property(e => e.Confirm)
+                    .HasColumnName("confirm");
             });
 
             modelBuilder.Entity<Report>(entity =>

@@ -20,9 +20,15 @@ namespace WM_Attendance_System.Services
         }
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
+            MailMessage email = new MailMessage();
             MailAddress from = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName, Encoding.UTF8);
-            MailAddress to = new MailAddress(mailRequest.ToEmail);
-            MailMessage email = new MailMessage(from, to);
+            email.From = from;
+            foreach(var address in mailRequest.ToEmails)
+            {
+                email.To.Add(address);
+            }
+            //MailAddress to = new MailAddress(mailRequest.ToEmail);
+            //MailMessage email = new MailMessage(from, to);
             email.Subject = mailRequest.Subject;
             email.Body = mailRequest.Body;
             email.BodyEncoding = Encoding.UTF8;
