@@ -54,7 +54,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         //PUT: api/User/changepassword/5
-        [HttpPut("changepassword/{id}")]
+        [HttpPut("change-password/{id}")]
         public async Task<IActionResult> ChangePassword(int id,ChangePassword changePassword)
         {
             if (!UserTableExists(id))
@@ -87,7 +87,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         //PUT: api/User/forgotpassword/5
-        [HttpPut("forgotpassword/{id}")]
+        [HttpPut("forgot-password/{id}")]
         public async Task<IActionResult> ForgotPassword(int id, ForgotPassword forgotPassword)
         {
             if (!UserTableExists(id))

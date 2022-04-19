@@ -27,10 +27,12 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<LeaveDetail> LeaveDetails { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<PendingRequestView> PendingRequests { get; set; }
+        public virtual DbSet<PendingShortLeaveRequestsView> PendingShortLeaveRequests { get; set; }
         public virtual DbSet<PendingUser> PendingUsers { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
+        public virtual DbSet<ShortLeaveRequest> ShortLeaves { get; set; }
         public virtual DbSet<Sms> Smss { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
@@ -290,7 +292,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("date");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(30)
+                    .HasMaxLength(75)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
@@ -299,12 +301,75 @@ namespace WM_Attendance_System.Data
                     .IsUnicode(false)
                     .HasColumnName("nic");
 
-                entity.Property(e => e.Time).HasColumnName("time");
-
                 entity.Property(e => e.Type)
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("type");
+
+                entity.Property(e => e.DurationType)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("duration_type");
+
+                entity.Property(e => e.SpecialNote)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("special_note");
+
+                entity.Property(e => e.Duration)
+                    .HasColumnName("duration");
+
+                entity.Property(e => e.ProfilePic)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("profile_pic");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("request_id");
+            });
+
+            modelBuilder.Entity<PendingShortLeaveRequestsView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("PendingShortLeaveRequests");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(75)
+                    .IsUnicode(false)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Nic)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("nic");
+
+                entity.Property(e => e.ProfilePic)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("profile_pic");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.StartTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("start_time");
+
+                entity.Property(e => e.EndTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("end_time");
+
+                entity.Property(e => e.SpecialNote)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("special_notes");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id");
             });
 
             modelBuilder.Entity<PendingUser>(entity =>
@@ -403,26 +468,22 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.SenderId).HasColumnName("sender_id");
 
                 entity.Property(e => e.Status)
-                    .HasMaxLength(10)
+                    .HasMaxLength(15)
                     .IsUnicode(false)
                     .HasColumnName("status");
 
-                entity.Property(e => e.Time).HasColumnName("time");
+                entity.Property(e => e.Type)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("type");
 
-                entity.HasOne(d => d.Approval)
-                    .WithMany(p => p.RequestApprovals)
-                    .HasForeignKey(d => d.ApprovalId)
-                    .HasConstraintName("FK3_Request");
+                entity.Property(e => e.Duration).HasColumnName("duration");
 
-                entity.HasOne(d => d.LeaveType)
-                    .WithMany(p => p.Requests)
-                    .HasForeignKey(d => d.LeaveTypeId)
-                    .HasConstraintName("FK2_Request");
+                entity.Property(e => e.SpecialNote)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("special_note");
 
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.RequestSenders)
-                    .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("FK1_Request");
             });
 
             modelBuilder.Entity<Setting>(entity =>
@@ -445,6 +506,46 @@ namespace WM_Attendance_System.Data
                     .WithMany(p => p.Settings)
                     .HasForeignKey(d => d.AdminId)
                     .HasConstraintName("FK_Settings");
+            });
+
+            modelBuilder.Entity<ShortLeaveRequest>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.ToTable("shortLeaveDetails");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.StartTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("start_time");
+
+                entity.Property(e => e.EndTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("end_time");
+
+                entity.Property(e => e.SpecialNote)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("special_notes");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.RequesterId)
+                    .HasColumnName("requester_id");
+
+                entity.Property(e => e.ApprovalId)
+                    .HasColumnName("approval_id");
             });
 
             modelBuilder.Entity<Sms>(entity =>
@@ -490,7 +591,7 @@ namespace WM_Attendance_System.Data
 
                 entity.ToTable("userTable");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.UserId).HasColumnType("int").HasColumnName("user_id");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(100)
