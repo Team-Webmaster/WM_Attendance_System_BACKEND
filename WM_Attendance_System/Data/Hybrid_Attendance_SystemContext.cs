@@ -541,7 +541,7 @@ namespace WM_Attendance_System.Data
                     .IsUnicode(false)
                     .HasColumnName("status");
 
-                entity.Property(e => e.RequesterId)
+                entity.Property(e => e.SenderId)
                     .HasColumnName("requester_id");
 
                 entity.Property(e => e.ApprovalId)

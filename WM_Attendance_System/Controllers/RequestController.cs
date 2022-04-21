@@ -123,7 +123,7 @@ namespace WM_Attendance_System.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                var requester = await _context.Users.FindAsync(shortLeaveRequest.RequesterId);
+                var requester = await _context.Users.FindAsync(shortLeaveRequest.SenderId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()
@@ -199,7 +199,7 @@ namespace WM_Attendance_System.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                var requester = await _context.Users.FindAsync(shortLeaveRequest.RequesterId);
+                var requester = await _context.Users.FindAsync(shortLeaveRequest.SenderId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()

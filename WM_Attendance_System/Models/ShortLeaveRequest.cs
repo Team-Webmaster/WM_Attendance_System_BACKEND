@@ -12,7 +12,7 @@ namespace WM_Attendance_System.Models
 		public string StartTime { get; set; }
 		public string EndTime { get; set; }
 		public string SpecialNote { get; set; }
-		public int RequesterId { get; set; }
+		public int SenderId { get; set; }
 		public int ApprovalId { get; set; }
 		public string Status { get; set; }
     }
