@@ -639,7 +639,10 @@ namespace WM_Attendance_System.Data
 
                 entity.ToTable("VideoConference");
 
-                entity.Property(e => e.ConferenceId).HasColumnName("conference_id");
+                entity.Property(e => e.ConferenceId)
+		    .HasMaxLength(20)
+                    .IsUnicode(false)
+		    .HasColumnName("conference_id");
 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")

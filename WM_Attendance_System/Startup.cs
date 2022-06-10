@@ -40,7 +40,7 @@ namespace WM_Attendance_System
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WM_Attendance_System", Version = "v1" });
             });
-            services.AddDbContext<WM_Attendance_System.Data.Hybrid_Attendance_SystemContext>((options) => {
+            services.AddDbContext<Data.Hybrid_Attendance_SystemContext>((options) => {
                 options.UseSqlServer(Configuration.GetConnectionString("DBConn"));
             });
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));

@@ -209,16 +209,16 @@ namespace WM_Attendance_System.Controllers
                 var PendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == login.Email);
                 if (PendingUser is null)
                 {
-                    return Ok(new { state = false, message = "Email not found" });
+                    return BadRequest(new { message = "Email not found" });
                 }
-                return Ok(new { state = false, message = "Your account is in approving process. Please Try again later." });
+                return BadRequest(new { message = "Your account is in approving process. Please Try again later." });
             }
             if (BCrypt.Net.BCrypt.Verify(login.Password, User.Password))
             {
                 var token = jWTService.generateJwtToken(login);
-                return Ok(new { state = true, token = token });
+                return Ok(new { data = User, token = token });
             }
-            return Ok(new { state = false, message = "Password Incorrect" });
+            return BadRequest(new { message = "Password Incorrect" });
         }
 
         [Authorize]

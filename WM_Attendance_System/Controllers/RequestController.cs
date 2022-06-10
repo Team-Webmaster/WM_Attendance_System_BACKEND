@@ -86,13 +86,14 @@ namespace WM_Attendance_System.Controllers
             {
                 await _context.SaveChangesAsync();
                 var requester = await _context.Users.FindAsync(request.SenderId);
+                var approval = await _context.Users.FindAsync(request.ApprovalId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()
                 {
                     ToEmails = Emails.ToArray(),
                     Subject = "Leave Request Granted.",
-                    Body = "Your Leave request is Approved by Administration"
+                    Body = $"Dear {requester.Name}, Your Leave request is Approved by {approval.Name}."
                 };
                 await mailService.SendEmailAsync(mailRequest);
                 return Ok(new { state = true, message = "Leave Request Approved Successfully Completed.",data=requester });
@@ -124,13 +125,14 @@ namespace WM_Attendance_System.Controllers
             {
                 await _context.SaveChangesAsync();
                 var requester = await _context.Users.FindAsync(shortLeaveRequest.SenderId);
+                var approval = await _context.Users.FindAsync(shortLeaveRequest.ApprovalId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()
                 {
                     ToEmails = Emails.ToArray(),
                     Subject = "Short Leave Request Granted.",
-                    Body = "Your Short Leave request is Approved by Administration"
+                    Body = $"Dear {requester.Name}, Your Short Leave request is Approved by {approval.Name}"
                 };
                 await mailService.SendEmailAsync(mailRequest);
                 return Ok(new { state = true, message = "Short Leave Request Approved Successfully Completed." });
@@ -162,13 +164,14 @@ namespace WM_Attendance_System.Controllers
             {
                 await _context.SaveChangesAsync();
                 var requester = await _context.Users.FindAsync(request.SenderId);
+                var approval = await _context.Users.FindAsync(request.ApprovalId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()
                 {
                     ToEmails = Emails.ToArray(),
                     Subject = "Leave Request Rejected.",
-                    Body = "Your Leave request is Rejected by Administration"
+                    Body = $"Dear {requester.Name}, Your Leave request is Rejected by {approval.Name}. Try for emergency leave from below link."
                 };
                 await mailService.SendEmailAsync(mailRequest);
                 return Ok(new { state = true, message = "Leave request rejected successfully completed." });
@@ -200,13 +203,14 @@ namespace WM_Attendance_System.Controllers
             {
                 await _context.SaveChangesAsync();
                 var requester = await _context.Users.FindAsync(shortLeaveRequest.SenderId);
+                var approval = await _context.Users.FindAsync(shortLeaveRequest.ApprovalId);
                 List<string> Emails = new List<string>();
                 Emails.Add(requester.Email);
                 MailRequest mailRequest = new MailRequest()
                 {
                     ToEmails = Emails.ToArray(),
                     Subject = "Short Leave Request Rejected.",
-                    Body = "Your Short Leave request is Rejected by Administration"
+                    Body = $"Dear {requester.Name}, Your Short Leave request is Rejected by {approval.Name}.If you want You can try it as emergency from below link."
                 };
                 await mailService.SendEmailAsync(mailRequest);
                 return Ok(new { state = true, message = "Short Leave request rejected successfully completed." });
