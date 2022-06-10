@@ -23,11 +23,13 @@ namespace WM_Attendance_System.Controllers
     {
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IZoomService zoomService;
+        private readonly IMailService mailService;
 
-        public VideoConferenceController(Hybrid_Attendance_SystemContext context, IZoomService zoomService)
+        public VideoConferenceController(Hybrid_Attendance_SystemContext context, IZoomService zoomService, IMailService mailService)
         {
             _context = context;
             this.zoomService = zoomService;
+            this.mailService = mailService;
         }
 
         // GET: api/VideoConference
@@ -54,7 +56,7 @@ namespace WM_Attendance_System.Controllers
         // PUT: api/VideoConference/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVideoConference(int id, VideoConference videoConference)
+        public async Task<IActionResult> PutVideoConference(string id, VideoConference videoConference)
         {
             if (id != videoConference.ConferenceId)
             {
@@ -87,21 +89,56 @@ namespace WM_Attendance_System.Controllers
         [HttpPost]
         public async Task<ActionResult<VideoConference>> PostVideoConference(VideoConference videoConference)
         {
-            _context.VideoConferences.Add(videoConference);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetVideoConference", new { id = videoConference.ConferenceId }, videoConference);
-        }
-
-        [HttpPost("zoom")]
-        public async Task<ActionResult> CreateMeeting(MeetingSettings meetingSettings)
-        {
+            MeetingSettings meetingSettings = new MeetingSettings();
+            meetingSettings.Topic = $"Meeting ID: {videoConference.ConferenceId}";
+            meetingSettings.Duration = "120";
+            meetingSettings.StartTime = $"{videoConference.Date}T{videoConference.Time}";
+            meetingSettings.Type = "2";
             MeetingLinks meetingLinks = zoomService.getScheduledLinks(meetingSettings).Result;
-            if(meetingLinks.HostLink is null || meetingLinks.JoinLink is null)
+            if (meetingLinks.HostLink is null || meetingLinks.JoinLink is null)
             {
                 return BadRequest();
             }
-            return Ok(new { state = true, data = meetingLinks });
+            _context.VideoConferences.Add(videoConference);
+            await _context.SaveChangesAsync();
+            List<string> participantsEmails = new List<string>();
+            List<string> hostEmail = new List<string>();
+            var videoConfHasUser = new VideoConferenceHasUser();
+            videoConfHasUser.ConferenceId = videoConference.ConferenceId;
+            foreach (var userId in videoConference.Participants)
+            {
+                var user = await _context.Users.FindAsync(userId);
+                participantsEmails.Add(user.Email);
+                videoConfHasUser.UserId = userId;
+                _context.VideoConferenceHasUsers.Add(videoConfHasUser);
+            }
+            videoConfHasUser.UserId = videoConference.HostId;
+            _context.VideoConferenceHasUsers.Add(videoConfHasUser);
+            if (videoConference.SchedulerId != videoConference.HostId)
+            {
+                videoConfHasUser.UserId = videoConference.SchedulerId;
+                _context.VideoConferenceHasUsers.Add(videoConfHasUser);
+                var scheduler = await _context.Users.FindAsync(videoConference.SchedulerId);
+                participantsEmails.Add(scheduler.Email);
+            }
+            await _context.SaveChangesAsync();
+            var host = await _context.Users.FindAsync(videoConference.HostId);
+            hostEmail.Add(host.Email);
+            MailRequest mailRequestForParticipants = new MailRequest()
+            {
+                ToEmails=participantsEmails.ToArray(),
+                Subject=$"Meeting Scheduled with ID:{videoConference.ConferenceId}",
+                Body=$"To Join scheduled meeting use this link:{meetingLinks.JoinLink}"
+            };
+            await mailService.SendEmailAsync(mailRequestForParticipants);
+            MailRequest mailRequestForHost = new MailRequest()
+            {
+                ToEmails = hostEmail.ToArray(),
+                Subject = $"Meeting Scheduled with ID:{videoConference.ConferenceId}",
+                Body = $"To start scheduled meeting use this link:{meetingLinks.HostLink}"
+            };
+            await mailService.SendEmailAsync(mailRequestForHost);
+            return Ok(new { message="Video conference scheduled successfully completed." });
         }
 
         // DELETE: api/VideoConference/5
@@ -116,11 +153,10 @@ namespace WM_Attendance_System.Controllers
 
             _context.VideoConferences.Remove(videoConference);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool VideoConferenceExists(int id)
+        private bool VideoConferenceExists(string id)
         {
             return _context.VideoConferences.Any(e => e.ConferenceId == id);
         }

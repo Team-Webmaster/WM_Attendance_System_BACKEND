@@ -18,8 +18,6 @@ namespace WM_Attendance_System.Models
             Reports = new HashSet<Report>();
             Settings = new HashSet<Setting>();
             Sms = new HashSet<Sms>();
-            VideoConferences = new HashSet<VideoConference>();
-            CIds = new HashSet<VideoConference>();
             CalendarEvents = new HashSet<HolidayCalendarEvent>();
             SmsNavigation = new HashSet<Sms>();
         }
@@ -45,9 +43,6 @@ namespace WM_Attendance_System.Models
         public virtual ICollection<Report> Reports { get; set; }
         public virtual ICollection<Setting> Settings { get; set; }
         public virtual ICollection<Sms> Sms { get; set; }
-        public virtual ICollection<VideoConference> VideoConferences { get; set; }
-
-        public virtual ICollection<VideoConference> CIds { get; set; }
         public virtual ICollection<HolidayCalendarEvent> CalendarEvents { get; set; }
         public virtual ICollection<Sms> SmsNavigation { get; set; }
     }

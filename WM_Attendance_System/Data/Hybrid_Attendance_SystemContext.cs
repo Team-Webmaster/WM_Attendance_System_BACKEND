@@ -37,6 +37,7 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
         public virtual DbSet<BlackListedEmail> BlackListedEmails { get; set; }
+        public virtual DbSet<VideoConferenceHasUser> VideoConferenceHasUsers { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -640,44 +641,25 @@ namespace WM_Attendance_System.Data
                 entity.ToTable("VideoConference");
 
                 entity.Property(e => e.ConferenceId)
-		    .HasMaxLength(20)
+		            .HasMaxLength(20)
                     .IsUnicode(false)
-		    .HasColumnName("conference_id");
+		            .HasColumnName("conference_id");
 
                 entity.Property(e => e.Date)
-                    .HasColumnType("date")
+                      .HasMaxLength(15)
+                    .IsUnicode(false)
                     .HasColumnName("date");
 
                 entity.Property(e => e.HostId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
                     .HasColumnName("host_id");
 
                 entity.Property(e => e.SchedulerId).HasColumnName("scheduler_id");
 
-                entity.Property(e => e.Time).HasColumnName("time");
-
-                entity.HasOne(d => d.Scheduler)
-                    .WithMany(p => p.VideoConferences)
-                    .HasForeignKey(d => d.SchedulerId)
-                    .HasConstraintName("FK_VideoConference");
-
-                entity.HasMany(d => d.UIds)
-                    .WithMany(p => p.CIds)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "VideoConferenceHasUser",
-                        l => l.HasOne<User>().WithMany().HasForeignKey("UId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK1_VideoConferenceHasUser"),
-                        r => r.HasOne<VideoConference>().WithMany().HasForeignKey("CId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK2_VideoConferenceHasUser"),
-                        j =>
-                        {
-                            j.HasKey("CId", "UId").HasName("PK_VCHU");
-
-                            j.ToTable("VideoConferenceHasUser");
-
-                            j.IndexerProperty<int>("CId").HasColumnName("c_id");
-
-                            j.IndexerProperty<int>("UId").HasColumnName("u_id");
-                        });
+                entity.Property(e => e.Time)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("time");
+                
             });
 
             modelBuilder.Entity<BlackListedEmail>(entity => 
@@ -691,6 +673,22 @@ namespace WM_Attendance_System.Data
                      .IsUnicode(false)
                      .HasColumnName("email");
                 
+            });
+
+            modelBuilder.Entity<VideoConferenceHasUser>(entity =>
+            {
+                entity.ToTable("VideoConferenceHasUser");
+
+                entity.HasKey(e => new { e.ConferenceId, e.UserId }).HasName("PK_VCHU");
+
+                entity.Property(e => e.ConferenceId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("c_id");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("u_id");
+
             });
 
             OnModelCreatingGeneratedFunctions(modelBuilder);

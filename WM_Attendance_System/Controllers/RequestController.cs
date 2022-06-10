@@ -96,7 +96,7 @@ namespace WM_Attendance_System.Controllers
                     Body = $"Dear {requester.Name}, Your Leave request is Approved by {approval.Name}."
                 };
                 await mailService.SendEmailAsync(mailRequest);
-                return Ok(new { state = true, message = "Leave Request Approved Successfully Completed.",data=requester });
+                return Ok(new {  message = "Leave Request Approved Successfully Completed." });
             }
             catch(DbUpdateConcurrencyException)
             {
@@ -135,7 +135,7 @@ namespace WM_Attendance_System.Controllers
                     Body = $"Dear {requester.Name}, Your Short Leave request is Approved by {approval.Name}"
                 };
                 await mailService.SendEmailAsync(mailRequest);
-                return Ok(new { state = true, message = "Short Leave Request Approved Successfully Completed." });
+                return Ok(new {  message = "Short Leave Request Approved Successfully Completed." });
             }
             catch(DbUpdateConcurrencyException)
             {
@@ -174,7 +174,7 @@ namespace WM_Attendance_System.Controllers
                     Body = $"Dear {requester.Name}, Your Leave request is Rejected by {approval.Name}. Try for emergency leave from below link."
                 };
                 await mailService.SendEmailAsync(mailRequest);
-                return Ok(new { state = true, message = "Leave request rejected successfully completed." });
+                return Ok(new { message = "Leave request rejected successfully completed." });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -213,7 +213,7 @@ namespace WM_Attendance_System.Controllers
                     Body = $"Dear {requester.Name}, Your Short Leave request is Rejected by {approval.Name}.If you want You can try it as emergency from below link."
                 };
                 await mailService.SendEmailAsync(mailRequest);
-                return Ok(new { state = true, message = "Short Leave request rejected successfully completed." });
+                return Ok(new { message = "Short Leave request rejected successfully completed." });
             }
             catch (DbUpdateConcurrencyException)
             {
