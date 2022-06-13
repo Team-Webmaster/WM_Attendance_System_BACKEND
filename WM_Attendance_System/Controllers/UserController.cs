@@ -151,24 +151,24 @@ namespace WM_Attendance_System.Controllers
             var blackListedUser = await _context.BlackListedEmails.FindAsync(pendingUser.Email);
             if (blackListedUser is not null)
             {
-                return Ok(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
+                return BadRequest(new {  message = "This Email is Blacklisted. Please use another email for registration." });
             }
             var isPendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isPendingUser is not null)
             {
-                return Ok(new { state = false, message = "This email is already in approving process. Try again with another email." });
+                return BadRequest(new { message = "This email is already in approving process. Try again with another email." });
             }
             var isUser = await _context.Users.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isUser is not null)
             {
-                return Ok(new { state = false, message = "This email is already registered. Try again with another email." });
+                return BadRequest(new { message = "This email is already registered. Try again with another email." });
             }
             string imgName = await SaveImage(pendingUser.ProfilePicture);
             IFaceClient faceClient = faceService.Authenticate();
             var addedFaceToFaceList=await faceService.AddFaceToFaceList(faceClient,imgName);
             if(addedFaceToFaceList is null)
             {
-                return Ok(new { state = false, message = "Uploaded image quality is not enough" });
+                return Ok(new { message = "Uploaded image quality is not enough" });
             }
             pendingUser.ProfilePic = await SaveImage(pendingUser.ProfilePicture);
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
