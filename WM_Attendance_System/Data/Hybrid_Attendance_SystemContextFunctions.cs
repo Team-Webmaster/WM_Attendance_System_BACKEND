@@ -11,7 +11,7 @@ namespace WM_Attendance_System.Data
     {
 
         [DbFunction("AttendHours", "dbo")]
-        public static float? AttendHours(int? userId, DateTime? start_date, DateTime? end_date)
+        public static float AttendHours(int userId, string start_date, string end_date)
         {
             throw new NotSupportedException("This method can only be called from Entity Framework Core queries");
         }
@@ -22,8 +22,14 @@ namespace WM_Attendance_System.Data
             throw new NotSupportedException("This method can only be called from Entity Framework Core queries");
         }
 
+        [DbFunction("Test", "dbo")]
+        public static int Test(int number)
+        {
+            throw new NotSupportedException();
+        }
+
         [DbFunction("CalendarEventsByUser", "dbo")]
-        public IQueryable<CalendarEventsByUserResult> CalendarEventsByUser(string user_id)
+        public IQueryable<CalendarEventsByUserResult> CalendarEventsByUser(int user_id)
         {
             return FromExpression(() => CalendarEventsByUser(user_id));
         }

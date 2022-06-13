@@ -19,6 +19,7 @@ namespace WM_Attendance_System.Models
         public int? Type { get; set; }
         public int? NoOfAnnualLeaves { get; set; }
         public string Status { get; set; }
+        public int Confirm { get; set; }
         [NotMapped]
         public IFormFile ProfilePicture { get; set; }
     }

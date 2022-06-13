@@ -16,6 +16,9 @@ using WM_Attendance_System.Settings;
 using WM_Attendance_System.Services;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WM_Attendance_System
 {
@@ -37,13 +40,17 @@ namespace WM_Attendance_System
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WM_Attendance_System", Version = "v1" });
             });
-            services.AddDbContext<WM_Attendance_System.Data.Hybrid_Attendance_SystemContext>((options) => {
+            services.AddDbContext<Data.Hybrid_Attendance_SystemContext>((options) => {
                 options.UseSqlServer(Configuration.GetConnectionString("DBConn"));
             });
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, MailService>();
             services.Configure<FaceAPI>(Configuration.GetSection("FaceAPI"));
             services.AddTransient<IFaceService, FaceService>();
+            services.Configure<JWTSettings>(Configuration.GetSection("JWT"));
+            services.AddTransient<IJWTService, JWTService>();
+            services.Configure<ZoomAPI>(Configuration.GetSection("ZoomAPI"));
+            services.AddTransient<IZoomService, ZoomService>();
             services.AddCors((options) =>
             {
                 options.AddDefaultPolicy((builder) =>
@@ -52,6 +59,23 @@ namespace WM_Attendance_System
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+            });
+            services.AddAuthentication((options) =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer((o) =>
+            {
+                var key = Encoding.ASCII.GetBytes(Configuration["JWT:Secret"]);
+                o.SaveToken = true;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
             });
         }
 
@@ -73,6 +97,8 @@ namespace WM_Attendance_System
             });
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseRouting();
 

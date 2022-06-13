@@ -8,7 +8,7 @@ namespace WM_Attendance_System.Models
 {
     public class MailRequest
     {
-        public string ToEmail { get; set; }
+        public string[] ToEmails { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
         internal Attachment MailAttachment { get; set; }

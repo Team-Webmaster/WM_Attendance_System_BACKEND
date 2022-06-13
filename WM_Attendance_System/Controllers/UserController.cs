@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,14 @@ namespace WM_Attendance_System.Controllers
         private readonly Hybrid_Attendance_SystemContext _context;
         private readonly IWebHostEnvironment hostEnvironment;
         private readonly IFaceService faceService;
+        private readonly IJWTService jWTService;
 
-        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService)
+        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService, IJWTService jWTService)
         {
             _context = context;
             this.hostEnvironment = hostEnvironment;
             this.faceService = faceService;
+            this.jWTService = jWTService;
         }
 
         // GET: api/User
@@ -51,7 +54,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         //PUT: api/User/changepassword/5
-        [HttpPut("changepassword/{id}")]
+        [HttpPut("change-password/{id}")]
         public async Task<IActionResult> ChangePassword(int id,ChangePassword changePassword)
         {
             if (!UserTableExists(id))
@@ -84,7 +87,7 @@ namespace WM_Attendance_System.Controllers
         }
 
         //PUT: api/User/forgotpassword/5
-        [HttpPut("forgotpassword/{id}")]
+        [HttpPut("forgot-password/{id}")]
         public async Task<IActionResult> ForgotPassword(int id, ForgotPassword forgotPassword)
         {
             if (!UserTableExists(id))
@@ -148,24 +151,24 @@ namespace WM_Attendance_System.Controllers
             var blackListedUser = await _context.BlackListedEmails.FindAsync(pendingUser.Email);
             if (blackListedUser is not null)
             {
-                return Ok(new { state = false, message = "This Email is Blacklisted. Please use another email for registration." });
+                return BadRequest(new {  message = "This Email is Blacklisted. Please use another email for registration." });
             }
             var isPendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isPendingUser is not null)
             {
-                return Ok(new { state = false, message = "This email is already in approving process. Try again with another email." });
+                return BadRequest(new { message = "This email is already in approving process. Try again with another email." });
             }
             var isUser = await _context.Users.SingleOrDefaultAsync(x => x.Email == pendingUser.Email);
             if(isUser is not null)
             {
-                return Ok(new { state = false, message = "This email is already registered. Try again with another email." });
+                return BadRequest(new { message = "This email is already registered. Try again with another email." });
             }
             string imgName = await SaveImage(pendingUser.ProfilePicture);
             IFaceClient faceClient = faceService.Authenticate();
             var addedFaceToFaceList=await faceService.AddFaceToFaceList(faceClient,imgName);
             if(addedFaceToFaceList is null)
             {
-                return Ok(new { state = false, message = "Uploaded image quality is not enough" });
+                return Ok(new { message = "Uploaded image quality is not enough" });
             }
             pendingUser.ProfilePic = await SaveImage(pendingUser.ProfilePicture);
             pendingUser.Password = BCrypt.Net.BCrypt.HashPassword(pendingUser.Password);
@@ -196,7 +199,42 @@ namespace WM_Attendance_System.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpPost("authorize")]
+        public async Task<ActionResult<User>> AuthorizeUserTable(Login login)
+        {
+            var User = await _context.Users.SingleOrDefaultAsync(x => x.Email == login.Email);
+            if (User is null)
+            {
+                var PendingUser = await _context.PendingUsers.SingleOrDefaultAsync(x => x.Email == login.Email);
+                if (PendingUser is null)
+                {
+                    return BadRequest(new { message = "Email not found" });
+                }
+                return BadRequest(new { message = "Your account is in approving process. Please Try again later." });
+            }
+            if (BCrypt.Net.BCrypt.Verify(login.Password, User.Password))
+            {
+                var token = jWTService.generateJwtToken(login);
+                return Ok(new { data = User, token = token });
+            }
+            return BadRequest(new { message = "Password Incorrect" });
+        }
 
+        [Authorize]
+        [HttpGet("auth")]
+        public async Task<ActionResult<User>> GetUser()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ",string.Empty);
+            string userEmail = jWTService.readClaimJwtToken(token);
+            var userTable = await _context.Users.SingleOrDefaultAsync(x => x.Email == userEmail);
+            if (userTable == null)
+            {
+                return NotFound();
+            }
+
+            return userTable;
+        }
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
