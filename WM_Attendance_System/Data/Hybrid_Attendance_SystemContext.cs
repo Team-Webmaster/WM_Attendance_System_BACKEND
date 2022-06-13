@@ -51,9 +51,15 @@ namespace WM_Attendance_System.Data
                     .HasColumnType("date")
                     .HasColumnName("date");
 
-                entity.Property(e => e.InTime).HasColumnName("in_time");
+                entity.Property(e => e.InTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("in_time");
 
-                entity.Property(e => e.OutTime).HasColumnName("out_time");
+                entity.Property(e => e.OutTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("out_time");
 
                 entity.Property(e => e.Type)
                     .HasMaxLength(10)
@@ -237,7 +243,21 @@ namespace WM_Attendance_System.Data
 
                 entity.Property(e => e.LeaveTypeId).HasColumnName("leave_type_id");
 
-                entity.Property(e => e.Time).HasColumnName("time");
+                entity.Property(e => e.Type)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("type");
+
+                entity.Property(e => e.Duration)
+                    .HasColumnName("duration");
+
+                entity.Property(e => e.SpecialNote)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("special_note");
+
+                entity.Property(e => e.SenderId)
+                    .HasColumnName("sender_id");
 
                 entity.HasOne(d => d.Approval)
                     .WithMany(p => p.LeaveDetails)
@@ -443,6 +463,14 @@ namespace WM_Attendance_System.Data
                 entity.Property(e => e.StartDate)
                     .HasColumnType("date")
                     .HasColumnName("start_date");
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("type");
+
+                entity.Property(e => e.RequesterId)
+                    .HasColumnName("requester_id");
 
                 entity.Property(e => e.UId).HasColumnName("u_id");
 

@@ -111,11 +111,11 @@ namespace WM_Attendance_System.Controllers
                 participantsEmails.Add(user.Email);
                 videoConfHasUser.UserId = userId;
                 _context.VideoConferenceHasUsers.Add(videoConfHasUser);
-		await _context.SaveChangesAsync();
+		        await _context.SaveChangesAsync();
             }
             videoConfHasUser.UserId = videoConference.HostId;
             _context.VideoConferenceHasUsers.Add(videoConfHasUser);
-	    await _context.SaveChangesAsync();
+	        await _context.SaveChangesAsync();
             if (videoConference.SchedulerId != videoConference.HostId)
             {
                 videoConfHasUser.UserId = videoConference.SchedulerId;
