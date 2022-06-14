@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace WM_Attendance_System.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetEvents()
+        [HttpGet("userId")]
+        public async Task<IActionResult> GetEvents(int userId)
         {
-            var attendHours = _context.CalendarEventsByUser(1);
-
-            return Ok(new { data=attendHours });
+            var calendarEvents = await _context.CalendarEventsByUser(userId).ToListAsync();
+            var shortCalendarEvents = await _context.ShortCalendarEventsByUser(userId).ToListAsync();
+            return Ok(new { calendarEvents=calendarEvents, shortCalendarEvents=shortCalendarEvents });
         }
 
     }

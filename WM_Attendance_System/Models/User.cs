@@ -11,7 +11,8 @@ namespace WM_Attendance_System.Models
             Attendances = new HashSet<Attendance>();
             HolidayCalendarEvents = new HashSet<HolidayCalendarEvent>();
             LeaveCalendarEvents = new HashSet<LeaveCalendarEvent>();
-            LeaveDetails = new HashSet<LeaveDetail>();
+            ApproveLeaveDetails = new HashSet<LeaveDetail>();
+            SenderLeaveDetails = new HashSet<LeaveDetail>();
             Leaves = new HashSet<Leave>();
             NotificationReceivers = new HashSet<Notification>();
             NotificationSenders = new HashSet<Notification>();
@@ -33,10 +34,12 @@ namespace WM_Attendance_System.Models
         public int? Type { get; set; }
         public float? NoOfAnnualLeaves { get; set; }
 
+
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<HolidayCalendarEvent> HolidayCalendarEvents { get; set; }
         public virtual ICollection<LeaveCalendarEvent> LeaveCalendarEvents { get; set; }
-        public virtual ICollection<LeaveDetail> LeaveDetails { get; set; }
+        public virtual ICollection<LeaveDetail> ApproveLeaveDetails { get; set; }
+        public virtual ICollection<LeaveDetail> SenderLeaveDetails { get; set; }
         public virtual ICollection<Leave> Leaves { get; set; }
         public virtual ICollection<Notification> NotificationReceivers { get; set; }
         public virtual ICollection<Notification> NotificationSenders { get; set; }

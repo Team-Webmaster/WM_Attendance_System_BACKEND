@@ -260,7 +260,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("sender_id");
 
                 entity.HasOne(d => d.Approval)
-                    .WithMany(p => p.LeaveDetails)
+                    .WithMany(p => p.ApproveLeaveDetails)
                     .HasForeignKey(d => d.ApprovalId)
                     .HasConstraintName("FK1_LeaveDetails");
 
@@ -268,6 +268,11 @@ namespace WM_Attendance_System.Data
                     .WithMany(p => p.LeaveDetails)
                     .HasForeignKey(d => d.LeaveTypeId)
                     .HasConstraintName("FK2_LeaveDetails");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.SenderLeaveDetails)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("FK3_LeaveDetails");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -660,6 +665,7 @@ namespace WM_Attendance_System.Data
                     .HasColumnName("telephone");
 
                 entity.Property(e => e.Type).HasColumnName("type");
+
             });
 
             modelBuilder.Entity<VideoConference>(entity =>

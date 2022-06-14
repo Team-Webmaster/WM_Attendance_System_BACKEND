@@ -20,6 +20,7 @@ namespace WM_Attendance_System.Models
         public int SenderId { get; set; }
 
         public virtual User Approval { get; set; }
+        public virtual User Sender { get; set; }
         public virtual Leave LeaveType { get; set; }
         public virtual ICollection<LeaveCalendarEvent> LeaveCalendarEvents { get; set; }
     }
