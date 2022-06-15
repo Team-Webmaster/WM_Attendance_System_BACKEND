@@ -34,9 +34,16 @@ namespace WM_Attendance_System.Data
             return FromExpression(() => CalendarEventsByUser(user_id));
         }
 
+        [DbFunction("ShortCalendarEventsByUser", "dbo")]
+        public IQueryable<ShortCalendarEventsByUser> ShortCalendarEventsByUser(int user_id)
+        {
+            return FromExpression(() => ShortCalendarEventsByUser(user_id));
+        }
+
         protected void OnModelCreatingGeneratedFunctions(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CalendarEventsByUserResult>().HasNoKey();
+            modelBuilder.Entity<ShortCalendarEventsByUser>().HasNoKey();
         }
     }
 }

@@ -108,19 +108,115 @@ namespace WM_Attendance_System.Controllers
             return NoContent();
         }
 
-        [HttpPost("report")]
-        public async Task<ActionResult> SendReport(MailRequest mailRequest)
+        [HttpPost("generate-report")]
+        public async Task<ActionResult> GenerateReports(Report report)
+        {
+            if(report.Type=="Performance Report")
+            {
+                return await PerformanceReport(report);
+            }
+            else if(report.Type=="Attendee Report")
+            {
+                return await AttendeeReport(report);
+            }
+            else if(report.Type=="Leave Master")
+            {
+                return await LeaveMasterReport(report);
+            }
+            return BadRequest();
+        }
+        private async Task<ActionResult> PerformanceReport(Report report)
         {
             try
             {
-                var records = await _context.PendingUsers.ToListAsync();
-                MemoryStream report = new MemoryStream();
-                var writer = new StreamWriter(report);
+                var requester = await _context.Users.FindAsync(report.RequesterId);
+                List<string> toEmails = new List<string>();
+                toEmails.Add(requester.Email);
+                MailRequest mailRequest = new MailRequest()
+                {
+                    ToEmails = toEmails.ToArray(),
+                    Subject = $"Report Created Successfully for UserID:{report.UId}",
+                    Body = "You can download your requested Report."
+                };
+                var records = await _context.Attendances
+                    .Where(attend => attend.Date >= report.StartDate && attend.Date <= report.EndDate && attend.UId == report.UId)
+                    .Select(a=>new { a.Id, a.Date, a.Type, a.InTime, a.OutTime, a.UId })
+                    .ToListAsync();
+                MemoryStream reportCsv = new MemoryStream();
+                var writer = new StreamWriter(reportCsv);
                 var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 await csv.WriteRecordsAsync(records);
                 writer.Flush();
-                report.Position = 0;
-                mailRequest.MailAttachment = new Attachment(report,"report.csv","text/csv");
+                reportCsv.Position = 0;
+                mailRequest.MailAttachment = new Attachment(reportCsv,"report.csv","text/csv");
+                await mailService.SendEmailAsync(mailRequest);
+                await csv.DisposeAsync();
+                return Ok(new { state = true, message = "Report Send Succesfully" });
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        private async Task<ActionResult> AttendeeReport(Report report)
+        {
+            try
+            {
+                var requester = await _context.Users.FindAsync(report.RequesterId);
+                List<string> toEmails = new List<string>();
+                toEmails.Add(requester.Email);
+                MailRequest mailRequest = new MailRequest()
+                {
+                    ToEmails = toEmails.ToArray(),
+                    Subject = $"Report Created Successfully for UserID:{report.UId}",
+                    Body = "You can download your requested Report."
+                };
+                var records = await _context.Attendances
+                    .Where(attend => attend.Date >= report.StartDate && attend.Date <= report.EndDate && attend.UId == report.UId && attend.Type == "Attend")
+                    .Select(a => new { a.Id, a.Date, a.Type, a.InTime, a.OutTime, a.UId })
+                    .ToListAsync();
+                MemoryStream reportCsv = new MemoryStream();
+                var writer = new StreamWriter(reportCsv);
+                var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                await csv.WriteRecordsAsync(records);
+                writer.Flush();
+                reportCsv.Position = 0;
+                mailRequest.MailAttachment = new Attachment(reportCsv, "report.csv", "text/csv");
+                await mailService.SendEmailAsync(mailRequest);
+                await csv.DisposeAsync();
+                return Ok(new { state = true, message = "Report Send Succesfully" });
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        private async Task<ActionResult> LeaveMasterReport(Report report)
+        {
+            try
+            {
+                var requester = await _context.Users.FindAsync(report.RequesterId);
+                List<string> toEmails = new List<string>();
+                toEmails.Add(requester.Email);
+                MailRequest mailRequest = new MailRequest()
+                {
+                    ToEmails = toEmails.ToArray(),
+                    Subject = $"Report Created Successfully for UserID:{report.UId}",
+                    Body = "You can download your requested Report."
+                };
+                var records = await _context.LeaveDetails
+                    .Where(leave => leave.Date >= report.StartDate && leave.Date <= report.EndDate && leave.SenderId == report.UId)
+                    .Select(a => new { a.LeaveId, a.Date, a.Type, LeaveType=a.LeaveType.Type, a.SpecialNote, a.ApprovalId })
+                    .ToListAsync();
+                MemoryStream reportCsv = new MemoryStream();
+                var writer = new StreamWriter(reportCsv);
+                var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                await csv.WriteRecordsAsync(records);
+                writer.Flush();
+                reportCsv.Position = 0;
+                mailRequest.MailAttachment = new Attachment(reportCsv, "report.csv", "text/csv");
                 await mailService.SendEmailAsync(mailRequest);
                 await csv.DisposeAsync();
                 return Ok(new { state = true, message = "Report Send Succesfully" });
