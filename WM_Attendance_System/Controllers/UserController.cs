@@ -97,6 +97,7 @@ namespace WM_Attendance_System.Controllers
                 return BadRequest("Can not found user.");
             }
             List<string> userMail = new List<string>();
+            userMail.Add(user.Email);
             MailRequest mailRequest = new MailRequest()
             {
                 ToEmails = userMail.ToArray(),
