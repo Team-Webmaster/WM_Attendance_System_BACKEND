@@ -64,14 +64,14 @@ namespace WM_Attendance_System.Controllers
             var user = await _context.Users.FindAsync(id);
             if (!BCrypt.Net.BCrypt.Verify(changePassword.CurrentPassword, user.Password))
             {
-                return BadRequest(new { state = false, message = "Old password incorrect." });
+                return BadRequest(new { message = "Old password incorrect." });
             }
             user.Password = BCrypt.Net.BCrypt.HashPassword(changePassword.NewPassword);
             _context.Entry(user).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(new { state = true, message = "Password changed succefully completed." });
+                return Ok(new { message = "Password changed succefully completed." });
             }
             catch(DbUpdateConcurrencyException)
             {

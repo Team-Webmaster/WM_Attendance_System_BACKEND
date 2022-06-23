@@ -16,6 +16,5 @@ namespace WM_Attendance_System.Models
         public int? UId { get; set; }
         [NotMapped]
         public IFormFile FaceImage { get; set; }
-        public virtual User UIdNavigation { get; set; }
     }
 }
