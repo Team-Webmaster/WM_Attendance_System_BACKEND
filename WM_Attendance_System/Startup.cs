@@ -55,7 +55,7 @@ namespace WM_Attendance_System
             {
                 options.AddDefaultPolicy((builder) =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
+                    builder.WithOrigins("http://localhost:3000","http://192.168.1.6:19000","http://localhost:19006")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });

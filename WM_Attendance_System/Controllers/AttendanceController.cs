@@ -37,6 +37,7 @@ namespace WM_Attendance_System.Controllers
             return await _context.Attendances.ToListAsync();
         }
 
+
         // GET: api/Attendance/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Attendance>> GetAttendance(int id)
@@ -118,7 +119,8 @@ namespace WM_Attendance_System.Controllers
             {
                 return Ok(new { state = false, message = "Face not matched" });
             }
-            return await PostAttendance(attendance);
+            //return await PostAttendance(attendance);
+	    return Ok(new {result=result} );
         }
 
         private async Task<MemoryStream> SaveImage(IFormFile formFile)

@@ -59,6 +59,39 @@ namespace WM_Attendance_System.Controllers
             }
         }
 
+        // POST: api/PendingUser/ApproveAll
+        [HttpPost("ApproveAll")]
+        public async Task<ActionResult<User>> ApproveAllPendingUser(MultipleID multipleID)
+        {
+            foreach (var id in multipleID.Ids)
+            {
+                var pendingUser = await _context.PendingUsers.FindAsync(id);
+
+                if (pendingUser == null)
+                {
+                    return NotFound();
+                }
+                pendingUser.Status = "Approved";
+                _context.Entry(pendingUser).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PendingUserExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return Ok();
+        }
+
         // GET: api/PendingUser/reject/5
         [HttpGet("reject/{id}")]
         public async Task<ActionResult<User>> RejectPendingUser(int id)
@@ -87,6 +120,39 @@ namespace WM_Attendance_System.Controllers
                     throw;
                 }
             }
+        }
+
+        // POST: api/PendingUser/RejectAll
+        [HttpPost("RejectAll")]
+        public async Task<ActionResult<User>> RejectAllPendingUser(MultipleID multipleID)
+        {
+            foreach (var id in multipleID.Ids)
+            {
+                var pendingUser = await _context.PendingUsers.FindAsync(id);
+
+                if (pendingUser == null)
+                {
+                    return NotFound();
+                }
+                pendingUser.Status = "Rejected";
+                _context.Entry(pendingUser).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PendingUserExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return Ok();
         }
 
         private bool PendingUserExists(int id)
