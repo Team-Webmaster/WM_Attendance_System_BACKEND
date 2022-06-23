@@ -23,13 +23,15 @@ namespace WM_Attendance_System.Controllers
         private readonly IWebHostEnvironment hostEnvironment;
         private readonly IFaceService faceService;
         private readonly IJWTService jWTService;
+        private readonly IMailService mailService;
 
-        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService, IJWTService jWTService)
+        public UserController(Hybrid_Attendance_SystemContext context, IWebHostEnvironment hostEnvironment, IFaceService faceService, IJWTService jWTService, IMailService mailService)
         {
             _context = context;
             this.hostEnvironment = hostEnvironment;
             this.faceService = faceService;
             this.jWTService = jWTService;
+            this.mailService = mailService;
         }
 
         // GET: api/User
@@ -84,6 +86,25 @@ namespace WM_Attendance_System.Controllers
                     throw;
                 }
             }
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPasswordLinkGenerate(Login login)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == login.Email);
+            if(user is null)
+            {
+                return BadRequest("Can not found user.");
+            }
+            List<string> userMail = new List<string>();
+            MailRequest mailRequest = new MailRequest()
+            {
+                ToEmails = userMail.ToArray(),
+                Subject = "Are you Forgot your password ?",
+                Body = $"http://localhost:3000/forgot-password/{user.UserId}"
+            };
+            await mailService.SendEmailAsync(mailRequest);
+            return Ok("Check your email for forgot password.");
         }
 
         //PUT: api/User/forgotpassword/5

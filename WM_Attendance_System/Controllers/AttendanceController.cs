@@ -37,12 +37,20 @@ namespace WM_Attendance_System.Controllers
             return await _context.Attendances.ToListAsync();
         }
 
-        // GET: api/Attendance/today/:date
+        // GET: api/Attendance/today/
         [HttpGet("today")]
         public async Task<ActionResult<IEnumerable<Attendance>>> GetTodayAttendances()
         {
             var date = DateTime.Now.Date;
             return await _context.Attendances.Where(a=>a.Date.Date==date).ToListAsync();
+        }
+
+        // GET: api/Attendance/today/:userId
+        [HttpGet("today/{userId}")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetTodayAttendances(int userId)
+        {
+            var date = DateTime.Now.Date;
+            return await _context.Attendances.Where(a => a.Date.Date == date && a.UId == userId).ToListAsync();
         }
 
         // GET: api/Attendance/5
