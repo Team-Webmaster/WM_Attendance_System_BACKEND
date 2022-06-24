@@ -31,7 +31,7 @@ namespace WM_Attendance_System.Controllers
             return await _context.Requests.ToListAsync();
         }
 
-        [HttpGet]
+        [HttpGet("emergency-leaves")]
         public async Task<ActionResult<IEnumerable<PendingEmergencyLeave>>> GetPendingERequests()
         {
             return await _context.PendingEmergencyLeaves.ToListAsync();
@@ -73,7 +73,7 @@ namespace WM_Attendance_System.Controllers
             var pendingShortLeaves = await _context.PendingShortLeaveRequests.ToListAsync();
             if (!pendingLeaves.Any() && !pendingShortLeaves.Any())
             {
-                return Ok(new { state = false, message = "No pending requests available" });
+                return Ok(new { state = false, pendingLeaves=pendingLeaves, pendingShortLeaves=pendingShortLeaves });
             }
             return Ok(new { state = true, pendingLeaves=pendingLeaves, pendingShortLeaves=pendingShortLeaves });
         }
