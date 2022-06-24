@@ -38,6 +38,8 @@ namespace WM_Attendance_System.Data
         public virtual DbSet<VideoConference> VideoConferences { get; set; }
         public virtual DbSet<BlackListedEmail> BlackListedEmails { get; set; }
         public virtual DbSet<VideoConferenceHasUser> VideoConferenceHasUsers { get; set; } 
+        public virtual DbSet<EmergencyLeaveDetail> EmergencyLeaveDetails { get; set; }
+        public virtual DbSet<PendingEmergencyLeave> PendingEmergencyLeaves { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -722,6 +724,65 @@ namespace WM_Attendance_System.Data
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("u_id");
+
+            });
+
+            modelBuilder.Entity<EmergencyLeaveDetail>(entity =>
+            {
+                entity.ToTable("emergencyLeaveDetails");
+
+                entity.HasKey(e => e.Id).HasName("PK_emergencyLeaveDetails");
+
+                entity.Property(e => e.Reason)
+                    .IsUnicode(false)
+                    .HasMaxLength(300)
+                    .HasColumnName("reason");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.RequesterId)
+                    .HasColumnName("requester_id");
+
+                entity.Property(e => e.Status)
+                    .IsUnicode(false)
+                    .HasMaxLength(15)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.ApprovalId)
+                    .HasColumnName("approval_id");
+
+            });
+
+            modelBuilder.Entity<PendingEmergencyLeave>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("pendingEmergencyLeaves");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Nic)
+                    .IsUnicode(false)
+                    .HasMaxLength(15)
+                    .HasColumnName("nic");
+
+                entity.Property(e => e.ProfilePic)
+                    .IsUnicode(false)
+                    .HasMaxLength(150)
+                    .HasColumnName("profile_pic");
+
+                entity.Property(e => e.Reason)
+                    .IsUnicode(false)
+                    .HasMaxLength(300)
+                    .HasColumnName("reason");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("user_id");
 
             });
 

@@ -31,6 +31,12 @@ namespace WM_Attendance_System.Controllers
             return await _context.Requests.ToListAsync();
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PendingEmergencyLeave>>> GetPendingERequests()
+        {
+            return await _context.PendingEmergencyLeaves.ToListAsync();
+        }
+
         // GET: api/Request/leave/5
         [HttpGet("leave/{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
@@ -298,6 +304,15 @@ namespace WM_Attendance_System.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRequest", new { id = request.RequestId }, request);
+        }
+
+        [HttpPost("emergency-leaves")]
+        public async Task<ActionResult<EmergencyLeaveDetail>> PostELRequest([FromForm] EmergencyLeaveDetail emergencyLeave)
+        {
+            _context.EmergencyLeaveDetails.Add(emergencyLeave);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("PostELRequest", new { id = emergencyLeave.Id }, emergencyLeave);
         }
 
         //POST: api/Request/short-leave-request
