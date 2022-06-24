@@ -70,11 +70,18 @@ namespace WM_Attendance_System.Controllers
         // PUT: api/Attendance/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAttendance(int id, Attendance attendance)
+        public async Task<IActionResult> PutAttendance(int id, [FromForm]Attendance attendance)
         {
             if (id != attendance.Id)
             {
                 return BadRequest();
+            }
+
+            IFaceClient faceClient = faceService.Authenticate();
+            var result = await faceService.IdentifyFaceList(faceClient, await SaveImage(attendance.FaceImage));
+            if (!result.Any())
+            {
+                return BadRequest(new { message = "Face not matched" });
             }
 
             _context.Entry(attendance).State = EntityState.Modified;
