@@ -95,14 +95,14 @@ namespace WM_Attendance_System.Controllers
                         from = user.OutTime, 
                         profilePic = user.ProfilePic 
                     });
-                }else if(user.OutTime.Equals(null) && user.Type.Equals("Break"))
+                }else if((user.OutTime == null) && user.Type.Equals("Break"))
                 {
                     workingDetails.Add(new
                     {
                         nic = user.Nic,
                         name = user.Name,
                         status = "Break",
-                        from = user.OutTime,
+                        from = user.InTime,
                         profilePic = user.ProfilePic
                     });
                 }
@@ -113,7 +113,7 @@ namespace WM_Attendance_System.Controllers
                         nic = user.Nic,
                         name = user.Name,
                         status = "On Work",
-                        from = user.OutTime,
+                        from = user.InTime,
                         profilePic = user.ProfilePic
                     });
                 }
