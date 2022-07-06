@@ -67,6 +67,60 @@ namespace WM_Attendance_System.Controllers
             return attendance;
         }
 
+        [HttpGet("working-status-board")]
+        public async Task<ActionResult> WorkingStatusDetails()
+        {
+            var today = DateTime.Now.Date;
+            var todayList = await _context.Attendances
+                .Where(a => a.Date.Date == today)
+                .Select(a => new
+                {
+                    a.UIdNavigation.Nic,
+                    a.UIdNavigation.Name,
+                    a.Type,
+                    a.InTime,
+                    a.OutTime,
+                    a.UIdNavigation.ProfilePic
+                })
+                .ToListAsync();
+            var workingDetails = new List<Object>();
+            foreach(var user in todayList)
+            {
+                if (user.OutTime != null && user.Type.Equals("Attend"))
+                {
+                    workingDetails.Add(new { 
+                        nic = user.Nic, 
+                        name = user.Name, 
+                        status = "Out of work", 
+                        from = user.OutTime, 
+                        profilePic = user.ProfilePic 
+                    });
+                }else if((user.OutTime == null) && user.Type.Equals("Break"))
+                {
+                    workingDetails.Add(new
+                    {
+                        nic = user.Nic,
+                        name = user.Name,
+                        status = "Break",
+                        from = user.InTime,
+                        profilePic = user.ProfilePic
+                    });
+                }
+                else
+                {
+                    workingDetails.Add(new
+                    {
+                        nic = user.Nic,
+                        name = user.Name,
+                        status = "On Work",
+                        from = user.InTime,
+                        profilePic = user.ProfilePic
+                    });
+                }
+            }
+            return Ok(workingDetails);
+        }
+
         // PUT: api/Attendance/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

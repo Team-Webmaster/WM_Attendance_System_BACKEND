@@ -166,6 +166,22 @@ namespace WM_Attendance_System.Controllers
             return NoContent();
         }
 
+        [HttpGet("addFace")]
+        public async Task<ActionResult> AddFace()
+        {
+            try
+            {
+                //string imageName = "20220408_153919.jpg";
+                IFaceClient faceClient = faceService.Authenticate();
+                await faceService.CreateFaceList(faceClient, "");
+                //var addedFaceToFaceList = await faceService.AddFaceToFaceList(faceClient, imageName);
+                return Ok("Face added.");
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         //POST: api/User/register
         [HttpPost("register")]
         public async Task<ActionResult<PendingUser>> PostPendingUserTable([FromForm]PendingUser pendingUser)

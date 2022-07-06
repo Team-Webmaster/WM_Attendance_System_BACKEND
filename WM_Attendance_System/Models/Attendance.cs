@@ -14,6 +14,7 @@ namespace WM_Attendance_System.Models
         public string OutTime { get; set; }
         public string Type { get; set; }
         public int? UId { get; set; }
+        public virtual User UIdNavigation { get; set; }
         [NotMapped]
         public IFormFile FaceImage { get; set; }
     }
