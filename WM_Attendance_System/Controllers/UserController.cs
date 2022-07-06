@@ -175,7 +175,7 @@ namespace WM_Attendance_System.Controllers
                 IFaceClient faceClient = faceService.Authenticate();
                 await faceService.CreateFaceList(faceClient, "");
                 //var addedFaceToFaceList = await faceService.AddFaceToFaceList(faceClient, imageName);
-                return Ok("Face added.");
+                return Ok("Face Added.");
             }catch(Exception e)
             {
                 return BadRequest(e.Message);
